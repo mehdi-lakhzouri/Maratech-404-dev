@@ -98,58 +98,184 @@
   --hc-border: #ffff00;
   --hc-link: #00ffff;
   --hc-muted: #cccc00;
+  --hc-surface: #111111;
+  --hc-success: #00ff00;
+  --hc-error: #ff4444;
+  --hc-info: #00ccff;
 }
 
+/* ── Global Resets ── */
 .high-contrast,
-.high-contrast body,
-.high-contrast .bg-white,
-.high-contrast .bg-gray-50,
-.high-contrast .dark\:bg-gray-900,
-.high-contrast .dark\:bg-gray-800 {
+.high-contrast body {
   background-color: var(--hc-bg) !important;
   color: var(--hc-fg) !important;
 }
 
-.high-contrast header,
-.high-contrast .bg-white,
-.high-contrast .dark\:bg-gray-800 {
-  background-color: #111111 !important;
-  border-color: var(--hc-border) !important;
+/* ── ALL backgrounds → black or dark surface ── */
+.high-contrast [class*="bg-white"],
+.high-contrast [class*="bg-gray-"],
+.high-contrast [class*="bg-slate-"],
+.high-contrast [class*="bg-zinc-"],
+.high-contrast [class*="bg-neutral-"],
+.high-contrast [class*="bg-stone-"] {
+  background-color: var(--hc-bg) !important;
 }
 
+.high-contrast [class*="bg-tili-"],
+.high-contrast [class*="bg-blue-"],
+.high-contrast [class*="bg-indigo-"],
+.high-contrast [class*="bg-purple-"],
+.high-contrast [class*="bg-violet-"],
+.high-contrast [class*="bg-fuchsia-"],
+.high-contrast [class*="bg-pink-"],
+.high-contrast [class*="bg-rose-"],
+.high-contrast [class*="bg-red-"],
+.high-contrast [class*="bg-orange-"],
+.high-contrast [class*="bg-amber-"],
+.high-contrast [class*="bg-yellow-"],
+.high-contrast [class*="bg-lime-"],
+.high-contrast [class*="bg-green-"],
+.high-contrast [class*="bg-emerald-"],
+.high-contrast [class*="bg-teal-"],
+.high-contrast [class*="bg-cyan-"],
+.high-contrast [class*="bg-sky-"] {
+  background-color: var(--hc-surface) !important;
+}
+
+/* Gradient backgrounds → flat black */
+.high-contrast [class*="bg-gradient"] {
+  background: var(--hc-bg) !important;
+}
+
+/* ── ALL text → yellow (high visibility) ── */
 .high-contrast h1,
 .high-contrast h2,
 .high-contrast h3,
+.high-contrast h4,
 .high-contrast p,
 .high-contrast span,
 .high-contrast div,
-.high-contrast label {
+.high-contrast label,
+.high-contrast li,
+.high-contrast td,
+.high-contrast th,
+.high-contrast caption,
+.high-contrast legend,
+.high-contrast figcaption,
+.high-contrast blockquote,
+.high-contrast pre,
+.high-contrast code,
+.high-contrast kbd,
+.high-contrast samp {
   color: var(--hc-fg) !important;
 }
 
-.high-contrast a,
-.high-contrast .text-tili-600,
-.high-contrast .text-tili-700,
-.high-contrast .text-tili-800 {
+/* Gray text classes → force yellow */
+.high-contrast [class*="text-gray-"],
+.high-contrast [class*="text-slate-"],
+.high-contrast [class*="text-zinc-"],
+.high-contrast [class*="text-neutral-"],
+.high-contrast [class*="text-stone-"] {
+  color: var(--hc-fg) !important;
+}
+
+/* Colored text → cyan (links/accents) */
+.high-contrast [class*="text-tili-"],
+.high-contrast [class*="text-blue-"],
+.high-contrast [class*="text-indigo-"],
+.high-contrast [class*="text-purple-"],
+.high-contrast [class*="text-violet-"],
+.high-contrast [class*="text-cyan-"],
+.high-contrast [class*="text-sky-"] {
   color: var(--hc-link) !important;
 }
 
+/* Success text → bright green */
+.high-contrast [class*="text-green-"],
+.high-contrast [class*="text-emerald-"],
+.high-contrast [class*="text-teal-"],
+.high-contrast [class*="text-lime-"] {
+  color: var(--hc-success) !important;
+}
+
+/* Error/Warning text → bright red/yellow */
+.high-contrast [class*="text-red-"],
+.high-contrast [class*="text-rose-"],
+.high-contrast [class*="text-pink-"] {
+  color: var(--hc-error) !important;
+}
+
+.high-contrast [class*="text-amber-"],
+.high-contrast [class*="text-orange-"],
+.high-contrast [class*="text-yellow-"],
+.high-contrast [class*="text-fuchsia-"] {
+  color: var(--hc-accent) !important;
+}
+
+/* ── ALL borders → bright yellow ── */
+.high-contrast [class*="border-"],
+.high-contrast [class*="divide-"] {
+  border-color: var(--hc-border) !important;
+}
+
+/* Ring colors */
+.high-contrast [class*="ring-"] {
+  --tw-ring-color: var(--hc-border) !important;
+}
+
+/* ── Links ── */
+.high-contrast a {
+  color: var(--hc-link) !important;
+}
+
+/* ── Buttons → strong contrast ── */
 .high-contrast button {
   border: 1px solid var(--hc-border) !important;
+  color: var(--hc-fg) !important;
 }
 
-.high-contrast .bg-tili-600,
-.high-contrast .bg-tili-700 {
-  background-color: #b8860b !important;
+/* Primary action buttons (Send, Submit, etc.) */
+.high-contrast button[class*="bg-tili-"],
+.high-contrast button[class*="bg-blue-"],
+.high-contrast button[class*="bg-indigo-"],
+.high-contrast button[class*="bg-purple-"] {
+  background-color: var(--hc-accent) !important;
   color: #000000 !important;
+  font-weight: 700 !important;
 }
 
+/* Danger buttons */
+.high-contrast button[class*="bg-red-"] {
+  background-color: var(--hc-error) !important;
+  color: #000000 !important;
+  font-weight: 700 !important;
+}
+
+/* Success buttons */
+.high-contrast button[class*="bg-green-"],
+.high-contrast button[class*="bg-emerald-"] {
+  background-color: var(--hc-success) !important;
+  color: #000000 !important;
+  font-weight: 700 !important;
+}
+
+/* Disabled buttons */
+.high-contrast button:disabled,
+.high-contrast button[disabled] {
+  background-color: #333333 !important;
+  color: #666666 !important;
+  border-color: #666666 !important;
+  opacity: 1 !important;
+}
+
+/* ── Forms: inputs, textareas, selects ── */
 .high-contrast input,
 .high-contrast textarea,
 .high-contrast select {
-  background-color: #111111 !important;
+  background-color: var(--hc-surface) !important;
   color: var(--hc-fg) !important;
   border-color: var(--hc-border) !important;
+  border-width: 2px !important;
 }
 
 .high-contrast input::placeholder,
@@ -157,6 +283,30 @@
   color: var(--hc-muted) !important;
 }
 
+.high-contrast input[type="checkbox"] {
+  accent-color: var(--hc-accent) !important;
+}
+
+/* ── Header / Nav ── */
+.high-contrast header,
+.high-contrast nav {
+  background-color: var(--hc-surface) !important;
+  border-color: var(--hc-border) !important;
+}
+
+/* Active nav tab */
+.high-contrast [class*="bg-tili-100"],
+.high-contrast [class*="bg-tili-50"] {
+  background-color: #333300 !important;
+}
+
+/* ── Cards / Panels / Surfaces ── */
+.high-contrast [role="dialog"],
+.high-contrast [role="log"] {
+  background-color: var(--hc-bg) !important;
+}
+
+/* ── Chat Bubbles ── */
 .high-contrast .prose {
   color: var(--hc-fg) !important;
 }
@@ -174,10 +324,71 @@
   border-color: var(--hc-border) !important;
 }
 
-/* Focus indicators — extra visible in high contrast */
+.high-contrast .prose a {
+  color: var(--hc-link) !important;
+}
+
+/* ── KBD / keyboard shortcuts ── */
+.high-contrast kbd {
+  background-color: var(--hc-surface) !important;
+  color: var(--hc-fg) !important;
+  border: 1px solid var(--hc-border) !important;
+}
+
+/* ── Toggle switches ── */
+.high-contrast [role="switch"] {
+  border: 2px solid var(--hc-border) !important;
+}
+
+.high-contrast [role="switch"][aria-checked="true"] {
+  background-color: var(--hc-accent) !important;
+}
+
+.high-contrast [role="switch"][aria-checked="false"] {
+  background-color: #333333 !important;
+}
+
+/* ── SVG icons ── */
+.high-contrast svg {
+  color: var(--hc-fg) !important;
+  stroke: var(--hc-fg) !important;
+}
+
+.high-contrast button[class*="bg-tili-"] svg,
+.high-contrast button[class*="bg-red-"] svg,
+.high-contrast button[class*="bg-green-"] svg {
+  color: #000000 !important;
+  stroke: #000000 !important;
+}
+
+/* ── Scrollbar ── */
+.high-contrast ::-webkit-scrollbar-thumb {
+  background: var(--hc-accent) !important;
+}
+
+.high-contrast ::-webkit-scrollbar-track {
+  background: var(--hc-bg) !important;
+}
+
+/* ── Animations: pulsing dots stay visible ── */
+.high-contrast [class*="animate-bounce"],
+.high-contrast [class*="animate-pulse"],
+.high-contrast [class*="animate-ping"] {
+  background-color: var(--hc-accent) !important;
+}
+
+/* ── Focus indicators — extra visible ── */
 .high-contrast *:focus {
   outline: 3px solid var(--hc-link) !important;
   outline-offset: 2px !important;
+}
+
+/* ── Hover states — subtle but visible ── */
+.high-contrast button:hover:not(:disabled),
+.high-contrast a:hover,
+.high-contrast [role="button"]:hover {
+  background-color: #222200 !important;
+  text-decoration: underline !important;
 }
 
 /* General focus improvement (always active) */
