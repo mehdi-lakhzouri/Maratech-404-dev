@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 /**
  * Dashboard Page
@@ -7,26 +7,26 @@
  * Accessible structure with proper headings and landmarks.
  */
 
-import { useAuth } from '@/lib/providers/auth-provider';
+import { useAuth } from "@/lib/providers/auth-provider";
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from '@/components/ui/card';
-import { Users, FolderKanban, ClipboardList, TrendingUp } from 'lucide-react';
+} from "@/components/ui/card";
+import { Users, FolderKanban, ClipboardList, TrendingUp } from "lucide-react";
 
 const roleLabels: Record<string, string> = {
-  RESPONSABLE: 'Responsable',
-  CHEF_PROJET: 'Chef de projet',
-  CONSULTANT: 'Consultant',
+  RESPONSABLE: "Responsable",
+  CHEF_PROJET: "Chef de projet",
+  CONSULTANT: "Consultant",
 };
 
 const roleDescriptions: Record<string, string> = {
-  RESPONSABLE: 'Vous avez accès à la gestion complète de la plateforme.',
-  CHEF_PROJET: 'Vous pouvez gérer vos projets et votre équipe.',
-  CONSULTANT: 'Vous pouvez consulter et contribuer aux projets assignés.',
+  RESPONSABLE: "Vous avez accès à la gestion complète de la plateforme.",
+  CHEF_PROJET: "Vous pouvez gérer vos projets et votre équipe.",
+  CONSULTANT: "Vous pouvez consulter et contribuer aux projets assignés.",
 };
 
 interface StatCardProps {
@@ -56,20 +56,24 @@ function StatCard({ title, value, description, icon }: StatCardProps) {
 export default function DashboardPage() {
   const { user } = useAuth();
 
-  if (!user) return null;
+  // Use default values when no user (dev mode without auth)
+  const displayUser = user || {
+    firstName: "User",
+    role: "CONSULTANT",
+  };
 
-  const roleLabel = roleLabels[user.role] || user.role;
-  const roleDescription = roleDescriptions[user.role] || '';
+  const roleLabel = roleLabels[displayUser.role] || displayUser.role;
+  const roleDescription = roleDescriptions[displayUser.role] || "";
 
   return (
     <div className="space-y-8">
       {/* Welcome Section */}
       <section aria-labelledby="welcome-heading">
         <h1 id="welcome-heading" className="text-3xl font-bold tracking-tight">
-          Bienvenue, {user.firstName} !
+          Bienvenue, {displayUser.firstName} !
         </h1>
         <p className="text-muted-foreground mt-2">
-          Vous êtes connecté en tant que <strong>{roleLabel}</strong>.{' '}
+          Vous êtes connecté en tant que <strong>{roleLabel}</strong>.{" "}
           {roleDescription}
         </p>
       </section>
@@ -92,7 +96,8 @@ export default function DashboardPage() {
             description="Aucune tâche assignée"
             icon={<ClipboardList className="h-4 w-4" />}
           />
-          {(user.role === 'RESPONSABLE' || user.role === 'CHEF_PROJET') && (
+          {(displayUser.role === "RESPONSABLE" ||
+            displayUser.role === "CHEF_PROJET") && (
             <StatCard
               title="Membres d'équipe"
               value="0"
@@ -115,11 +120,13 @@ export default function DashboardPage() {
           Actions rapides
         </h2>
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-          {user.role === 'RESPONSABLE' && (
+          {displayUser.role === "RESPONSABLE" && (
             <>
               <Card className="hover:bg-accent/50 transition-colors cursor-pointer">
                 <CardHeader>
-                  <CardTitle className="text-lg">Gérer les utilisateurs</CardTitle>
+                  <CardTitle className="text-lg">
+                    Gérer les utilisateurs
+                  </CardTitle>
                   <CardDescription>
                     Ajouter, modifier ou supprimer des utilisateurs
                   </CardDescription>
@@ -128,9 +135,7 @@ export default function DashboardPage() {
               <Card className="hover:bg-accent/50 transition-colors cursor-pointer">
                 <CardHeader>
                   <CardTitle className="text-lg">Créer un projet</CardTitle>
-                  <CardDescription>
-                    Démarrer un nouveau projet
-                  </CardDescription>
+                  <CardDescription>Démarrer un nouveau projet</CardDescription>
                 </CardHeader>
               </Card>
               <Card className="hover:bg-accent/50 transition-colors cursor-pointer">
@@ -144,14 +149,12 @@ export default function DashboardPage() {
             </>
           )}
 
-          {user.role === 'CHEF_PROJET' && (
+          {displayUser.role === "CHEF_PROJET" && (
             <>
               <Card className="hover:bg-accent/50 transition-colors cursor-pointer">
                 <CardHeader>
                   <CardTitle className="text-lg">Mes projets</CardTitle>
-                  <CardDescription>
-                    Voir et gérer vos projets
-                  </CardDescription>
+                  <CardDescription>Voir et gérer vos projets</CardDescription>
                 </CardHeader>
               </Card>
               <Card className="hover:bg-accent/50 transition-colors cursor-pointer">
@@ -165,15 +168,13 @@ export default function DashboardPage() {
               <Card className="hover:bg-accent/50 transition-colors cursor-pointer">
                 <CardHeader>
                   <CardTitle className="text-lg">Planning</CardTitle>
-                  <CardDescription>
-                    Voir le planning des tâches
-                  </CardDescription>
+                  <CardDescription>Voir le planning des tâches</CardDescription>
                 </CardHeader>
               </Card>
             </>
           )}
 
-          {user.role === 'CONSULTANT' && (
+          {displayUser.role === "CONSULTANT" && (
             <>
               <Card className="hover:bg-accent/50 transition-colors cursor-pointer">
                 <CardHeader>

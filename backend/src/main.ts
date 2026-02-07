@@ -13,8 +13,11 @@ async function bootstrap() {
 
   // Get config service
   const configService = app.get(ConfigService);
-  const port = configService.get<number>('env.port') || 3001;
-  const frontendUrl = configService.get<string>('env.frontendUrl') || 'http://localhost:3000';
+  
+  // FIX 1: Read directly from .env (fallback to 3001)
+  const port = configService.get('env.port') || process.env.PORT || 3001;
+  
+  const frontendUrl = configService.get('env.frontendUrl') || process.env.FRONTEND_URL || 'http://localhost:3000';
   const isProduction = configService.get('env.nodeEnv') === 'production';
 
   // Use Pino logger
@@ -27,9 +30,13 @@ async function bootstrap() {
   // Cookie parser
   app.use(cookieParser());
 
-  // CORS configuration
+  // FIX 2: Enhanced CORS configuration
   app.enableCors({
-    origin: isProduction ? frontendUrl : [frontendUrl, 'http://localhost:3000'],
+    origin: [
+      frontendUrl,                // The config URL
+      'http://localhost:3000',    // Standard localhost
+      'http://127.0.0.1:3000'     // FIX: Explicit IPv4
+    ],
     credentials: true,
     methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
     allowedHeaders: [
@@ -37,18 +44,19 @@ async function bootstrap() {
       'Authorization',
       'X-Correlation-Id',
       'X-Idempotency-Key',
+      'Idempotency-Key', // 👈 THIS WAS MISSING! (Required for creation)
     ],
   });
 
   // Global prefix for all routes
   app.setGlobalPrefix('api/v1');
 
-  // Start server
-  await app.listen(port);
+  // FIX 3: Bind to 0.0.0.0 to ensure IPv4 availability
+  await app.listen(port, '0.0.0.0');
 
   const logger = app.get(Logger);
   logger.log(`🚀 TILI Backend running on http://localhost:${port}/api/v1`);
-  logger.log(`📚 Environment: ${configService.get('env.nodeEnv')}`);
+  logger.log(`📚 Environment: ${process.env.NODE_ENV || 'development'}`);
 }
 
 bootstrap();

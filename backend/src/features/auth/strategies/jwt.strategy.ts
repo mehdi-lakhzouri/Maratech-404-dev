@@ -18,6 +18,7 @@ export interface JwtPayload {
 }
 
 export interface AuthenticatedUser {
+  sub: string;
   id: string;
   email: string;
   role: UserRole;
@@ -72,6 +73,7 @@ export class JwtStrategy extends PassportStrategy(Strategy, 'jwt') {
     }
 
     return {
+      sub: payload.sub,
       id: user._id.toString(),
       email: user.email,
       role: user.role,

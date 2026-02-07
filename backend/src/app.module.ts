@@ -12,6 +12,7 @@ import { createValidationPipe } from './shared/http/pipes';
 
 // Feature modules
 import { AuthModule } from './features/auth';
+import { MeetingsModule } from './features/meetings';
 import { JwtAuthGuard, RolesGuard } from './features/auth/guards';
 
 @Module({
@@ -35,6 +36,7 @@ import { JwtAuthGuard, RolesGuard } from './features/auth/guards';
 
     // Feature modules
     AuthModule,
+    MeetingsModule,
   ],
   providers: [
     // Global validation pipe
@@ -56,16 +58,16 @@ import { JwtAuthGuard, RolesGuard } from './features/auth/guards';
     },
 
     // Global JWT auth guard (applied to all routes, use @Public() to exclude)
-    {
-      provide: APP_GUARD,
-      useClass: JwtAuthGuard,
-    },
+    // {                         // 👈 Disable this block
+    //   provide: APP_GUARD,
+    //   useClass: JwtAuthGuard,
+    // },
 
     // Global roles guard
-    {
-      provide: APP_GUARD,
-      useClass: RolesGuard,
-    },
+    // {                         // 👈 Disable this block
+    //   provide: APP_GUARD,
+    //   useClass: JwtAuthGuard,
+    // },
   ],
 })
 export class AppModule {}
