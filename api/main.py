@@ -16,7 +16,6 @@ import sys
 import time
 import json
 import logging
-import shutil
 from pathlib import Path
 from contextlib import asynccontextmanager
 from typing import List, Optional
@@ -77,6 +76,7 @@ async def lifespan(app: FastAPI):
     except Exception as e:
         logger.error(f"❌ Failed to load RAG system: {e}")
         raise
+
     yield
     logger.info("👋 Shutting down")
 

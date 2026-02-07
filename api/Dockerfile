@@ -3,13 +3,14 @@
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 FROM python:3.13-slim
 
-# System dependencies for PyMuPDF, Pillow, and sentence-transformers
+# System dependencies for PyMuPDF, Pillow, sentence-transformers, and audio processing
 RUN apt-get update && apt-get install -y --no-install-recommends \
     build-essential \
     libffi-dev \
     libmupdf-dev \
     libjpeg-dev \
     libpng-dev \
+    ffmpeg \
     && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app
@@ -43,6 +44,10 @@ RUN mkdir -p /app/docs/pdf /app/docs/captions /app/RAG/chroma_db
 # Pre-download the HuggingFace embedding model at build time
 # so it doesn't download at first request
 RUN python -c "from sentence_transformers import SentenceTransformer; SentenceTransformer('all-MiniLM-L6-v2')"
+
+# Pre-download Whisper STT model (small, multilingual)
+RUN python -c "from faster_whisper import WhisperModel; WhisperModel('small', device='cpu', compute_type='int8')" \
+    || echo "Whisper model download skipped"
 
 # Run ingestion at build time so the vector store is ready
 # This requires the .env to NOT be needed for embeddings (huggingface is local)

@@ -87,16 +87,34 @@ class RAGResponse:
 
 CONTEXTUALIZE_PROMPT = ChatPromptTemplate.from_messages([
     ("system",
-     "Reformule la dernière question pour qu'elle soit autonome (compréhensible sans historique). "
-     "Ne réponds PAS. Retourne UNIQUEMENT la question reformulée."),
+     "Tu es un expert en reformulation de contexte. "
+     "Tâche : Reformule la dernière question pour qu'elle soit autonome, en incluant le contexte de l'historique si nécessaire. "
+     "⚠️ IMPORTANT : Conserve STRICTEMENT la langue et le dialecte de la question originale (ex: si c'est en Derja, reformule en Derja). "
+     "Ne réponds PAS à la question."),
     MessagesPlaceholder("chat_history"),
     ("human", "{input}"),
 ])
 
-QA_SYSTEM = """Tu es l'assistant IA de TILI. Réponds en français, basé UNIQUEMENT sur le contexte.
-Règles: cite les sources [Source: fichier.pdf, p.X]. Si absent du contexte, dis-le. Sois structuré.
+QA_SYSTEM = """Tu es "Tounsi-Bot", l'assistant expert et sympa de TILI. 
 
-CONTEXTE:
+ INSTRUCTION SUPRÊME :
+Même si le contexte est en Français, tu DOIS répondre dans la langue de l'utilisateur.
+
+1. DETECTION DE LANGUE :
+   Si la question contient des mots comme "chnouwa", "kifch", "wa9tech", "win", "mta3":
+   >>> C'EST DU TOUNSI (DERJA).
+   >>> TA RÉPONSE DOIT ÊTRE 100% EN DERJA (Alphabet latin/chat).
+   >>> Commence ta réponse par "" pour montrer que tu as compris.
+   >>> TRADUIS les infos du contexte (Français) vers le Derja.
+
+   Si la question est en Français :
+   >>> Réponds en Français standard.
+
+2. LE CONTEXTE (SOURCE DE VÉRITÉ) :
+   Base-toi UNIQUEMENT sur les infos ci-dessous.
+   Cite tes sources à la fin.
+
+[CONTEXTE]:
 {context}"""
 
 QA_PROMPT = ChatPromptTemplate.from_messages([
@@ -315,10 +333,26 @@ IDK_INDICATORS = [
     "impossible de répondre",
     "aucune information",
     "pas mentionné",
+    # Derja IDK indicators
+    "ma l9itech",
+    "ma 3andich",
+    "mawjouda",
+    "ma naaref",
 ]
 
 
-def _is_idk_response(answer: str) -> bool:
+# ─── Derja Detection ───
+DERJA_MARKERS = [
+    "chnouwa", "kifch", "kif", "win", "wa9tech", "3lach", "chkoun",
+    "mta3", "hedha", "hédha", "barcha", "flouss", "7keya", "5ouya",
+    "ya5i", "bech", "elli", "fama", "mawjoud", "nafs", "3and",
+]
+
+def _is_derja(text: str) -> bool:
+    """Detect if user input is in Tunisian Derja."""
+    text_lower = text.lower()
+    matches = sum(1 for m in DERJA_MARKERS if m in text_lower)
+    return matches >= 1
     """Detect if the LLM response is an 'I don't know' answer."""
     answer_lower = answer.lower()
     return any(indicator in answer_lower for indicator in IDK_INDICATORS)
@@ -443,8 +477,11 @@ def ask_with_metadata(
     chunks = retrieve_with_scores(vector_store, standalone_q, use_mmr=use_mmr)
 
     if not chunks:
+        empty_msg = ("🇹🇳 Ma l9aw 7ata document fil base mta3 TILI."
+                     if _is_derja(question)
+                     else "Aucun document trouvé dans la base de connaissances TILI.")
         return RAGResponse(
-            answer="Aucun document trouvé dans la base de connaissances TILI.",
+            answer=empty_msg,
             standalone_question=standalone_q,
             latency_ms=int((time.time() - start) * 1000),
             confidence="none",
@@ -460,15 +497,24 @@ def ask_with_metadata(
     # ── Step 3: Quality Gate ──
 
     if quality == "none":
-        return RAGResponse(
-            answer=(
+        if _is_derja(question):
+            no_info_msg = (
+                "🇹🇳 Ma l9itech 7ata ma3louma fil documents mta3 TILI bech njawbek.\n\n"
+                "💡 **Nasiha:**\n"
+                "• Jarreb ta3mel question akther précise\n"
+                "• T7a99e9 eli sou2alek 3la les comptes-rendus, rapports, conventions walla finances mta3 TILI"
+            )
+        else:
+            no_info_msg = (
                 "Je n'ai pas trouvé d'information pertinente dans les documents TILI "
                 "pour répondre à cette question.\n\n"
                 "💡 **Suggestions:**\n"
                 "• Reformulez votre question avec des termes plus spécifiques\n"
                 "• Vérifiez que la question porte sur les comptes-rendus, rapports, "
                 "conventions ou finances de TILI"
-            ),
+            )
+        return RAGResponse(
+            answer=no_info_msg,
             sources=chunks[:2],
             standalone_question=standalone_q,
             latency_ms=int((time.time() - start) * 1000),

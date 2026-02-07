@@ -364,6 +364,7 @@ function ChatPage({ registerVCHandlers, vcActive, vcToggle }) {
               aria-label="Zone de saisie de votre question. Tapez ou utilisez le bouton micro pour la saisie vocale."
               role="textbox"
             />
+
             <button
               onClick={handleSend}
               disabled={!input.trim() || loading || streaming}
@@ -373,6 +374,7 @@ function ChatPage({ registerVCHandlers, vcActive, vcToggle }) {
               Envoyer
             </button>
           </div>
+
           {isListening && (
             <p
               className="mt-1 text-xs text-red-500 dark:text-red-400 animate-pulse"
