@@ -13,6 +13,8 @@ import { createValidationPipe } from './shared/http/pipes';
 // Feature modules
 import { AuthModule } from './features/auth';
 import { MeetingsModule } from './features/meetings';
+// 👇 NEW IMPORT
+import { ProjectsModule } from './features/projects/projects.module';
 import { JwtAuthGuard, RolesGuard } from './features/auth/guards';
 
 @Module({
@@ -37,6 +39,8 @@ import { JwtAuthGuard, RolesGuard } from './features/auth/guards';
     // Feature modules
     AuthModule,
     MeetingsModule,
+    // 👇 REGISTERED HERE
+    ProjectsModule,
   ],
   providers: [
     // Global validation pipe

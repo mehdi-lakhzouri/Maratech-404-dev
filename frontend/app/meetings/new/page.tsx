@@ -12,6 +12,8 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { useCreateMeeting } from "@/lib/api/meetings";
+// 👇 NEW IMPORT
+import { useGetProjects } from "@/lib/api/projects";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -70,6 +72,10 @@ type CreateMeetingFormValues = z.infer<typeof createMeetingSchema>;
 export default function CreateMeetingPage() {
   const router = useRouter();
   const createMeeting = useCreateMeeting();
+
+  // 👇 FETCH PROJECTS FROM DB
+  const { data: projects, isLoading: isLoadingProjects } = useGetProjects();
+
   const form = useForm<CreateMeetingFormValues>({
     resolver: zodResolver(createMeetingSchema),
     defaultValues: {
@@ -210,9 +216,18 @@ export default function CreateMeetingPage() {
                         </SelectTrigger>
                       </FormControl>
                       <SelectContent>
-                        <SelectItem value="507f1f77bcf86cd799439012">
-                          Projet Demo
-                        </SelectItem>
+                        {/* 👇 DYNAMIC LIST */}
+                        {isLoadingProjects ? (
+                          <SelectItem value="loading" disabled>
+                            Chargement...
+                          </SelectItem>
+                        ) : (
+                          projects?.map((project) => (
+                            <SelectItem key={project._id} value={project._id}>
+                              {project.name}
+                            </SelectItem>
+                          ))
+                        )}
                       </SelectContent>
                     </Select>
                     <FormDescription>
