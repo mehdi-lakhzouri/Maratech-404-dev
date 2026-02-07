@@ -1,0 +1,58 @@
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+#  TILI RAG — Docker Compose
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+#  Usage:
+#    docker-compose up --build        # Build & start
+#    docker-compose up -d             # Start in background
+#    docker-compose down              # Stop
+#    docker-compose logs -f api       # Follow API logs
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+services:
+  # ── Backend: FastAPI + RAG Pipeline ──
+  api:
+    build:
+      context: .
+      dockerfile: api/Dockerfile
+    container_name: tili-api
+    ports:
+      - "8000:8000"
+    environment:
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - OPENROUTER_BASE_URL=${OPENROUTER_BASE_URL:-https://openrouter.ai/api/v1}
+      - EMBEDDING_PROVIDER=${EMBEDDING_PROVIDER:-huggingface}
+    volumes:
+      # Persist vector store between restarts
+      - chroma_data:/app/RAG/chroma_db
+      # Persist uploaded PDFs
+      - pdf_data:/app/docs/pdf
+      # Persist image caption cache
+      - captions_data:/app/docs/captions
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/health')"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+
+  # ── Frontend: React + Nginx ──
+  web:
+    build:
+      context: ./web
+      dockerfile: Dockerfile
+      args:
+        # In Docker, the browser calls /api/* which nginx proxies to http://api:8000
+        VITE_API_URL: ""
+    container_name: tili-web
+    ports:
+      - "80:80"
+    depends_on:
+      api:
+        condition: service_healthy
+    restart: unless-stopped
+
+volumes:
+  chroma_data:
+  pdf_data:
+  captions_data:

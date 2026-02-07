@@ -1,0 +1,3 @@
+markdown>=3.4.1
+xhtml2pdf>=0.2.11
+beautifulsoup4>=4.11.1

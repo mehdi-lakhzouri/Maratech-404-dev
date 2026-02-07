@@ -1,0 +1,255 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: #94a3b8;
+  border-radius: 3px;
+}
+
+/* Markdown styling in chat */
+.prose h2 {
+  font-size: 1.15rem;
+  font-weight: 700;
+  margin-top: 0.75rem;
+  margin-bottom: 0.25rem;
+}
+.prose h3 {
+  font-size: 1.05rem;
+  font-weight: 600;
+  margin-top: 0.5rem;
+  margin-bottom: 0.25rem;
+}
+.prose ul {
+  list-style-type: disc;
+  padding-left: 1.25rem;
+  margin: 0.25rem 0;
+}
+.prose ol {
+  list-style-type: decimal;
+  padding-left: 1.25rem;
+  margin: 0.25rem 0;
+}
+.prose li {
+  margin: 0.1rem 0;
+}
+.prose p {
+  margin: 0.35rem 0;
+}
+.prose strong {
+  font-weight: 700;
+}
+.prose table {
+  border-collapse: collapse;
+  margin: 0.5rem 0;
+  width: 100%;
+  font-size: 0.85rem;
+}
+.prose th,
+.prose td {
+  border: 1px solid #d1d5db;
+  padding: 0.3rem 0.5rem;
+  text-align: left;
+}
+.prose th {
+  background: #f3f4f6;
+  font-weight: 600;
+}
+.dark .prose th {
+  background: #374151;
+  border-color: #4b5563;
+}
+.dark .prose td {
+  border-color: #4b5563;
+}
+
+/* Streaming cursor */
+@keyframes blink {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0;
+  }
+}
+.streaming-cursor::after {
+  content: "▊";
+  animation: blink 0.8s infinite;
+  color: #3b82f6;
+}
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   ACCESSIBILITY: High Contrast Mode (black/yellow)
+   Activated by .high-contrast class on <html>
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+
+.high-contrast {
+  --hc-bg: #000000;
+  --hc-fg: #ffff00;
+  --hc-accent: #ffd700;
+  --hc-border: #ffff00;
+  --hc-link: #00ffff;
+  --hc-muted: #cccc00;
+}
+
+.high-contrast,
+.high-contrast body,
+.high-contrast .bg-white,
+.high-contrast .bg-gray-50,
+.high-contrast .dark\:bg-gray-900,
+.high-contrast .dark\:bg-gray-800 {
+  background-color: var(--hc-bg) !important;
+  color: var(--hc-fg) !important;
+}
+
+.high-contrast header,
+.high-contrast .bg-white,
+.high-contrast .dark\:bg-gray-800 {
+  background-color: #111111 !important;
+  border-color: var(--hc-border) !important;
+}
+
+.high-contrast h1,
+.high-contrast h2,
+.high-contrast h3,
+.high-contrast p,
+.high-contrast span,
+.high-contrast div,
+.high-contrast label {
+  color: var(--hc-fg) !important;
+}
+
+.high-contrast a,
+.high-contrast .text-tili-600,
+.high-contrast .text-tili-700,
+.high-contrast .text-tili-800 {
+  color: var(--hc-link) !important;
+}
+
+.high-contrast button {
+  border: 1px solid var(--hc-border) !important;
+}
+
+.high-contrast .bg-tili-600,
+.high-contrast .bg-tili-700 {
+  background-color: #b8860b !important;
+  color: #000000 !important;
+}
+
+.high-contrast input,
+.high-contrast textarea,
+.high-contrast select {
+  background-color: #111111 !important;
+  color: var(--hc-fg) !important;
+  border-color: var(--hc-border) !important;
+}
+
+.high-contrast input::placeholder,
+.high-contrast textarea::placeholder {
+  color: var(--hc-muted) !important;
+}
+
+.high-contrast .prose {
+  color: var(--hc-fg) !important;
+}
+
+.high-contrast .prose strong {
+  color: #ffffff !important;
+}
+
+.high-contrast .prose th {
+  background-color: #333300 !important;
+  color: var(--hc-fg) !important;
+}
+
+.high-contrast .prose td {
+  border-color: var(--hc-border) !important;
+}
+
+/* Focus indicators — extra visible in high contrast */
+.high-contrast *:focus {
+  outline: 3px solid var(--hc-link) !important;
+  outline-offset: 2px !important;
+}
+
+/* General focus improvement (always active) */
+*:focus-visible {
+  outline: 2px solid #3b82f6;
+  outline-offset: 2px;
+}
+
+/* Enhanced focus for buttons and interactive elements */
+button:focus-visible,
+a:focus-visible,
+input:focus-visible,
+textarea:focus-visible,
+select:focus-visible,
+[role="button"]:focus-visible,
+[tabindex]:focus-visible {
+  outline: 3px solid #3b82f6;
+  outline-offset: 2px;
+  box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.2);
+}
+
+/* Skip link styling — visible only on focus */
+.skip-link:focus {
+  position: fixed;
+  top: 8px;
+  left: 8px;
+  z-index: 9999;
+  background: #1e40af;
+  color: white;
+  padding: 12px 24px;
+  border-radius: 8px;
+  font-weight: bold;
+  font-size: 1rem;
+  text-decoration: none;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   ACCESSIBILITY: Reduced Motion
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+
+.reduce-motion *,
+.reduce-motion *::before,
+.reduce-motion *::after {
+  animation-duration: 0.001ms !important;
+  animation-iteration-count: 1 !important;
+  transition-duration: 0.001ms !important;
+}
+
+/* Also respect OS-level preference */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+}
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   ACCESSIBILITY: Screen Reader Only
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}

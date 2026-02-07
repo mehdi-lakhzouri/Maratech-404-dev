@@ -1,0 +1,40 @@
+# Python
+.venv/
+__pycache__/
+*.pyc
+*.pyo
+*.egg-info/
+.pytest_cache/
+
+# Node
+web/node_modules/
+web/dist/
+
+# ChromaDB (will be rebuilt inside container)
+RAG/chroma_db/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Git
+.git/
+.gitignore
+
+# Docker
+Dockerfile
+docker-compose.yml
+.dockerignore
+
+# OS
+Thumbs.db
+.DS_Store
+
+# Docs cache (will be regenerated)
+docs/captions/
+
+# Env (passed via docker-compose)
+RAG/.env
+web/.env
