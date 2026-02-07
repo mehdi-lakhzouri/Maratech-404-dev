@@ -195,3 +195,39 @@ export class UserStatsDto {
   byRole: Record<UserRole, number>;
   recentSignups: number; // Last 30 days
 }
+
+// ========================
+// CONSULTANT DTOs (Chef Projet)
+// ========================
+
+export class CreateConsultantDto {
+  @IsString()
+  @MinLength(2)
+  @MaxLength(100)
+  fullName: string;
+
+  @IsEmail()
+  @MaxLength(255)
+  email: string;
+
+  @IsString()
+  @MinLength(8)
+  @MaxLength(100)
+  password: string;
+}
+
+export class BulkCreateConsultantsDto {
+  @IsArray()
+  @ArrayMinSize(1)
+  @ValidateNested({ each: true })
+  @Type(() => CreateConsultantDto)
+  consultants: CreateConsultantDto[];
+}
+
+export class BulkCreateResultDto {
+  total: number;
+  success: number;
+  failed: number;
+  created: UserResponseDto[];
+  errors: Array<{ email: string; message: string }>;
+}

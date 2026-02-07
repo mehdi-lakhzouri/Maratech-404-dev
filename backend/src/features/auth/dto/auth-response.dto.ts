@@ -16,24 +16,7 @@ export class AuthUserResponseDto {
 }
 
 /**
- * Response DTO for login initiation (OTP required)
- */
-export class LoginInitResponseDto {
-  requiresOtp: true;
-  email: string;
-  expiresAt: Date;
-  message: string;
-
-  constructor(email: string, expiresAt: Date) {
-    this.requiresOtp = true;
-    this.email = email;
-    this.expiresAt = expiresAt;
-    this.message = 'OTP sent to your email. Please verify to complete login.';
-  }
-}
-
-/**
- * Response DTO for successful login (after OTP verification)
+ * Response DTO for successful login
  */
 export class LoginResponseDto {
   user: AuthUserResponseDto;
@@ -56,20 +39,5 @@ export class RegisterResponseDto {
   ) {
     this.user = user;
     this.message = message;
-  }
-}
-
-/**
- * Response DTO for OTP resend
- */
-export class ResendOtpResponseDto {
-  email: string;
-  expiresAt: Date;
-  message: string;
-
-  constructor(email: string, expiresAt: Date) {
-    this.email = email;
-    this.expiresAt = expiresAt;
-    this.message = 'A new OTP has been sent to your email.';
   }
 }

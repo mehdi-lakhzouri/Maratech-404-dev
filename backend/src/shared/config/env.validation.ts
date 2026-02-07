@@ -30,4 +30,9 @@ export const envValidationSchema = Joi.object({
     then: Joi.required(),
     otherwise: Joi.optional().default('dev-encryption-key-32chars!!'),
   }),
+
+  // Trello integration (optional - only required when using Trello features)
+  TRELLO_API_KEY: Joi.string().optional().default(''),
+  TRELLO_DEFAULT_BOARD_ID: Joi.string().optional().default(''),
+  TRELLO_DEFAULT_LIST_ID: Joi.string().optional().default(''),
 });

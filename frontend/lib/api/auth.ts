@@ -41,10 +41,14 @@ function transformUser(user: Omit<User, 'firstName' | 'lastName'>): User {
 }
 
 /**
- * Login - Initiate login with email and password (sends OTP)
+ * Login - Login with email and password
  */
-export async function login(data: LoginRequest): Promise<LoginInitResponse> {
-  return apiClient.post<LoginInitResponse>(API_ENDPOINTS.auth.login, data);
+export async function login(data: LoginRequest): Promise<LoginResponse> {
+  const response = await apiClient.post<LoginResponse>(API_ENDPOINTS.auth.login, data);
+  return {
+    ...response,
+    user: transformUser(response.user),
+  };
 }
 
 /**

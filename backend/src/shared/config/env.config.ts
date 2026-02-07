@@ -19,8 +19,13 @@ export const envConfig = registerAs('env', () => ({
   // Frontend URL for CORS
   frontendUrl: process.env.FRONTEND_URL || 'http://localhost:3000',
 
- // Encryption key for sensitive data (e.g., integration tokens)
+  // Encryption key for sensitive data (e.g., integration tokens)
   encryptionKey: process.env.ENCRYPTION_KEY || 'dev-encryption-key-32chars!!',
+
+  // Trello integration
+  trelloApiKey: process.env.TRELLO_API_KEY || '',
+  trelloDefaultBoardId: process.env.TRELLO_DEFAULT_BOARD_ID || '',
+  trelloDefaultListId: process.env.TRELLO_DEFAULT_LIST_ID || '',
 }));
 
 export type EnvConfig = ReturnType<typeof envConfig>;

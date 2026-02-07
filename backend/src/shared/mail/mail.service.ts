@@ -44,20 +44,29 @@ export class MailService {
     this.transporter.verify().then(() => {
       this.logger.log('Mail transporter initialized successfully');
     }).catch((error) => {
-      this.logger.warn(`Mail transporter verification failed: ${error.message}`);
+        this.logger.warn(
+          `Mail transporter verification failed: ${error.message}`,
+        );
     });
   }
 
   private loadTemplates(): void {
-    const templatesDir = path.join(__dirname, '..', '..', 'templates', 'mail');
-    
+    // In dev mode: dist/src/shared/mail -> go up 3 levels -> dist/ -> templates/mail
+    // In production: dist/shared/mail -> go up 2 levels -> dist/ -> templates/mail
+    // We're using the src structure, so need to go up 3 levels
+    const templatesDir = path.join(__dirname, '..', '..', '..', 'templates', 'mail');
+    this.logger.log(`Looking for templates in: ${templatesDir}`);
+    this.logger.log(`__dirname is: ${__dirname}`);
+
     try {
       if (!fs.existsSync(templatesDir)) {
+        this.logger.warn(`Templates directory does not exist: ${templatesDir}`);
         fs.mkdirSync(templatesDir, { recursive: true });
         this.logger.log(`Created templates directory: ${templatesDir}`);
       }
 
       const templateFiles = fs.readdirSync(templatesDir).filter(f => f.endsWith('.hbs'));
+      this.logger.log(`Found ${templateFiles.length} template files: ${templateFiles.join(', ')}`);
       
       for (const file of templateFiles) {
         const templateName = path.basename(file, '.hbs');
@@ -67,7 +76,7 @@ export class MailService {
         this.logger.log(`Loaded email template: ${templateName}`);
       }
     } catch (error) {
-      this.logger.warn(`Could not load templates: ${error}`);
+      this.logger.error(`Could not load templates: ${error}`);
     }
   }
 
@@ -107,19 +116,5 @@ export class MailService {
       this.logger.error(`Failed to send email to ${options.to}: ${error}`);
       throw error;
     }
-  }
-
-  async sendOtpEmail(to: string, fullName: string, otp: string): Promise<void> {
-    await this.sendMail({
-      to,
-      subject: 'Votre code de vérification TILI',
-      template: 'otp-verification',
-      context: {
-        fullName,
-        otp: otp.split(''),
-        expiresInMinutes: 2,
-        year: new Date().getFullYear(),
-      },
-    });
   }
 }

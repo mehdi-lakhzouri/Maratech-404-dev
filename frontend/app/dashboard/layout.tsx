@@ -4,11 +4,11 @@
  * Dashboard Layout
  * ----------------
  * Protected layout for dashboard pages.
- * Includes header and main content area.
+ * Includes sidebar and main content area.
  */
 
 import ProtectedLayout from '@/components/layouts/protected-layout';
-import { DashboardHeader } from '@/components/layouts/dashboard-header';
+import { Sidebar } from '@/components/ui/sidbar';
 
 interface DashboardLayoutProps {
   children: React.ReactNode;
@@ -17,10 +17,12 @@ interface DashboardLayoutProps {
 export default function DashboardLayout({ children }: DashboardLayoutProps) {
   return (
     <ProtectedLayout>
-      <div className="min-h-screen bg-background">
-        <DashboardHeader />
-        <main className="container mx-auto px-4 py-8" role="main">
-          {children}
+      <div className="flex min-h-screen bg-background">
+        <Sidebar />
+        <main className="flex-1 overflow-auto">
+          <div className="container mx-auto px-6 py-8" role="main">
+            {children}
+          </div>
         </main>
       </div>
     </ProtectedLayout>

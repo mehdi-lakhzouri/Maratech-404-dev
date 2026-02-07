@@ -6,9 +6,7 @@ import { usePathname } from 'next/navigation';
 import {
   LayoutDashboard,
   Users,
-  Calendar,
-  ClipboardCheck,
-  UserCheck,
+  FileText,
   Settings,
   ChevronLeft,
   ChevronRight,
@@ -16,6 +14,8 @@ import {
   Shield,
   UserCog,
   LogOut,
+  Calendar,
+  CheckSquare,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
@@ -33,6 +33,8 @@ import {
   CollapsibleTrigger,
 } from '@/components/ui/collapsible';
 import { useLogout } from '@/lib/hooks/use-auth';
+import { useAuth } from '@/lib/providers/auth-provider';
+import type { UserRole } from '@/lib/api/types';
 
 interface NavItem {
   title: string;
@@ -41,6 +43,8 @@ interface NavItem {
   badge?: string | number;
   badgeVariant?: 'default' | 'secondary' | 'destructive' | 'outline';
   children?: NavItem[];
+  /** Roles allowed to see this nav item (undefined = all roles) */
+  roles?: UserRole[];
 }
 
 const navItems: NavItem[] = [
@@ -53,6 +57,7 @@ const navItems: NavItem[] = [
     title: 'Administration',
     href: '/admin',
     icon: Shield,
+    roles: ['RESPONSABLE'],
     children: [
       {
         title: 'Gestion Utilisateurs',
@@ -62,24 +67,26 @@ const navItems: NavItem[] = [
     ],
   },
   {
-    title: 'Sessions',
-    href: '/sessions',
-    icon: Calendar,
-  },
-  {
-    title: 'Participants',
-    href: '/participants',
+    title: 'Équipe',
+    href: '/team',
     icon: Users,
+    roles: ['CHEF_PROJET'],
   },
   {
-    title: 'Check-ins',
-    href: '/checkins',
-    icon: UserCheck,
+    title: 'Gestion des Documents',
+    href: '/documents',
+    icon: FileText,
   },
   {
-    title: 'Inscriptions',
-    href: '/registrations',
-    icon: ClipboardCheck,
+    title: 'Réunions',
+    href: '/meetings',
+    icon: Calendar,
+    roles: ['RESPONSABLE', 'CHEF_PROJET'],
+  },
+  {
+    title: 'Tâches',
+    href: '/action-items',
+    icon: CheckSquare,
   },
 ];
 
@@ -97,8 +104,15 @@ interface SidebarProps {
 
 export function Sidebar({ className }: SidebarProps) {
   const [isCollapsed, setIsCollapsed] = useState(false);
-  const [openMenus, setOpenMenus] = useState<Record<string, boolean>>({ '/participants': true });
+  const [openMenus, setOpenMenus] = useState<Record<string, boolean>>({ '/admin': true });
   const pathname = usePathname();
+  const logout = useLogout();
+  const { user } = useAuth();
+
+  // Filter nav items based on user role
+  const filteredNavItems = navItems.filter(
+    (item) => !item.roles || (user && item.roles.includes(user.role))
+  );
 
   const toggleSidebar = () => {
     setIsCollapsed(!isCollapsed);
@@ -233,7 +247,7 @@ export function Sidebar({ className }: SidebarProps) {
         {/* Navigation */}
         <ScrollArea className="flex-1 px-3 py-4" style={{ colorScheme: 'dark' }}>
           <nav className="flex flex-col gap-1">
-            {navItems.map((item) => (
+            {filteredNavItems.map((item) => (
               <NavItemComponent key={item.href} item={item} />
             ))}
           </nav>

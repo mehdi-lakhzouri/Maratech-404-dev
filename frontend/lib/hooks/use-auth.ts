@@ -44,14 +44,23 @@ export function useCurrentUser() {
 }
 
 /**
- * Hook for login initiation (sends OTP)
- * Returns email and expiration for OTP verification step
+ * Hook for login
+ * Logs in user and redirects to dashboard
  */
 export function useLogin() {
+  const queryClient = useQueryClient();
+  const router = useRouter();
+
   return useMutation({
     mutationFn: (data: LoginRequest) => loginApi(data),
+    onSuccess: (response) => {
+      // Update the user query cache
+      queryClient.setQueryData(authKeys.user(), response.user);
+      // Navigate to dashboard
+      router.push('/dashboard');
+    },
     onError: (error: ApiError) => {
-      console.error('Login initiation failed:', error.message);
+      console.error('Login failed:', error.message);
     },
   });
 }

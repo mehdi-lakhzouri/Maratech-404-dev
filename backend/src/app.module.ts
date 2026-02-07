@@ -12,6 +12,11 @@ import { createValidationPipe } from './shared/http/pipes';
 
 // Feature modules
 import { AuthModule } from './features/auth';
+import { UsersModule } from './features/users/users.module';
+import { DocumentsModule } from './features/documents/documents.module';
+import { MeetingsModule } from './features/meetings/meetings.module';
+import { ActionItemsModule } from './features/action-items/action-items.module';
+import { TrelloModule } from './features/integrations/trello/trello.module';
 import { JwtAuthGuard, RolesGuard } from './features/auth/guards';
 
 @Module({
@@ -35,6 +40,11 @@ import { JwtAuthGuard, RolesGuard } from './features/auth/guards';
 
     // Feature modules
     AuthModule,
+    UsersModule,
+    DocumentsModule,
+    MeetingsModule,
+    ActionItemsModule,
+    TrelloModule,
   ],
   providers: [
     // Global validation pipe

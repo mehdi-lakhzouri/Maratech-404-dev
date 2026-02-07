@@ -6,8 +6,6 @@ import {
   IsBoolean,
   IsOptional,
   IsEnum,
-  Length,
-  Matches,
 } from 'class-validator';
 import { Transform } from 'class-transformer';
 import { UserRole } from '../../users/entities/user-role.enum';
@@ -26,30 +24,6 @@ export class LoginDto {
   @IsBoolean()
   @IsOptional()
   rememberMe?: boolean;
-}
-
-export class VerifyOtpDto {
-  @IsEmail({}, { message: 'Please provide a valid email address' })
-  @IsNotEmpty({ message: 'Email is required' })
-  @Transform(({ value }) => value?.toLowerCase().trim())
-  email: string;
-
-  @IsString({ message: 'OTP must be a string' })
-  @IsNotEmpty({ message: 'OTP is required' })
-  @Length(4, 4, { message: 'OTP must be 4 digits' })
-  @Matches(/^\d{4}$/, { message: 'OTP must contain only digits' })
-  otp: string;
-
-  @IsBoolean()
-  @IsOptional()
-  rememberMe?: boolean;
-}
-
-export class ResendOtpDto {
-  @IsEmail({}, { message: 'Please provide a valid email address' })
-  @IsNotEmpty({ message: 'Email is required' })
-  @Transform(({ value }) => value?.toLowerCase().trim())
-  email: string;
 }
 
 export class RegisterDto {

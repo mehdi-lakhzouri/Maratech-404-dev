@@ -39,13 +39,17 @@ export type LoginFormData = z.infer<typeof loginSchema>;
 
 /**
  * User roles available for self-registration
- * CHEF_PROJET can only be added by RESPONSABLE
  */
 export const USER_ROLES = [
   { 
     value: 'RESPONSABLE', 
     label: 'Responsable',
     description: 'Gérer les projets et les équipes'
+  },
+  { 
+    value: 'CHEF_PROJET', 
+    label: 'Chef de Projet',
+    description: 'Piloter et coordonner les projets'
   },
   { 
     value: 'CONSULTANT', 
@@ -70,7 +74,7 @@ export const registerSchema = z
       .string()
       .min(2, 'Le nom doit contenir au moins 2 caractères')
       .max(50, 'Le nom ne peut pas dépasser 50 caractères'),
-    role: z.enum(['RESPONSABLE', 'CONSULTANT'], {
+    role: z.enum(['RESPONSABLE', 'CHEF_PROJET', 'CONSULTANT'], {
       error: 'Veuillez sélectionner un rôle',
     }),
   })

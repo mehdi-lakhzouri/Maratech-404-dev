@@ -15,7 +15,7 @@ import { useState } from 'react';
 import Link from 'next/link';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Eye, EyeOff, Loader2, UserCog, Users, ArrowRight, ArrowLeft, Check } from 'lucide-react';
+import { Eye, EyeOff, Loader2, UserCog, Users, Briefcase, ArrowRight, ArrowLeft, Check } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -47,8 +47,9 @@ import {
 import { ApiError } from '@/lib/api/client';
 import { cn } from '@/lib/utils';
 
-const roleIcons = {
+const roleIcons: Record<string, React.ComponentType<{ className?: string }>> = {
   RESPONSABLE: UserCog,
+  CHEF_PROJET: Briefcase,
   CONSULTANT: Users,
 };
 
@@ -219,11 +220,11 @@ export default function RegisterPage() {
                         <FormLabel required>Quel est votre rôle ?</FormLabel>
                         <FormControl>
                           <div 
-                            className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-2"
+                            className="grid grid-cols-1 sm:grid-cols-3 gap-4 mt-2"
                             role="radiogroup"
                             aria-label="Sélection du rôle"
                           >
-                            {USER_ROLES.map((role) => {
+                            {USER_ROLES.map((role, index) => {
                               const Icon = roleIcons[role.value as keyof typeof roleIcons];
                               const isSelected = field.value === role.value;
                               
@@ -233,7 +234,28 @@ export default function RegisterPage() {
                                   type="button"
                                   role="radio"
                                   aria-checked={isSelected}
+                                  tabIndex={isSelected || (!field.value && index === 0) ? 0 : -1}
                                   onClick={() => field.onChange(role.value)}
+                                  onKeyDown={(e) => {
+                                    const roles = USER_ROLES;
+                                    let nextIndex = index;
+                                    if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
+                                      e.preventDefault();
+                                      nextIndex = (index + 1) % roles.length;
+                                    } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
+                                      e.preventDefault();
+                                      nextIndex = (index - 1 + roles.length) % roles.length;
+                                    } else if (e.key === ' ' || e.key === 'Enter') {
+                                      e.preventDefault();
+                                      field.onChange(role.value);
+                                      return;
+                                    } else {
+                                      return;
+                                    }
+                                    field.onChange(roles[nextIndex].value);
+                                    const nextEl = e.currentTarget.parentElement?.children[nextIndex] as HTMLElement;
+                                    nextEl?.focus();
+                                  }}
                                   className={cn(
                                     "relative flex flex-col items-center p-6 rounded-lg border-2 transition-all",
                                     "focus:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",

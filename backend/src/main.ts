@@ -20,6 +20,12 @@ async function bootstrap() {
   // Use Pino logger
   app.useLogger(app.get(Logger));
 
+  // Disable ETag generation to prevent 304 responses
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+  const expressApp = app.getHttpAdapter().getInstance();
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-call
+  expressApp.set('etag', false);
+
   // Security middleware
   app.use(helmet());
   app.use(compression());

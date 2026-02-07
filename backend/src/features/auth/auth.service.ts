@@ -5,14 +5,11 @@ import { Types } from 'mongoose';
 import { PinoLogger } from 'nestjs-pino';
 import { UsersRepository } from '../users/repositories/users.repository';
 import { SessionsRepository } from './repositories/sessions.repository';
-import { OtpService } from './services/otp.service';
-import { LoginDto, RegisterDto, VerifyOtpDto, ResendOtpDto } from './dto/auth.dto';
+import { LoginDto, RegisterDto } from './dto/auth.dto';
 import {
   AuthUserResponseDto,
   LoginResponseDto,
-  LoginInitResponseDto,
   RegisterResponseDto,
-  ResendOtpResponseDto,
 } from './dto/auth-response.dto';
 import { JwtPayload, AuthenticatedUser } from './strategies/jwt.strategy';
 import {
@@ -39,7 +36,6 @@ export class AuthService {
   constructor(
     private readonly usersRepository: UsersRepository,
     private readonly sessionsRepository: SessionsRepository,
-    private readonly otpService: OtpService,
     private readonly jwtService: JwtService,
     private readonly configService: ConfigService,
     private readonly logger: PinoLogger,
@@ -107,10 +103,13 @@ export class AuthService {
   }
 
   /**
-   * Initiate login - validate credentials and send OTP
+   * Login - validate credentials and create session
    */
-  async loginInitiate(dto: LoginDto): Promise<LoginInitResponseDto> {
-    this.logger.info({ email: dto.email }, 'Initiating login');
+  async login(
+    dto: LoginDto,
+    requestMetadata?: { ip?: string; userAgent?: string },
+  ): Promise<{ response: LoginResponseDto; cookies: CookieOptions }> {
+    this.logger.info({ email: dto.email }, 'Login attempt');
 
     // Find user by email
     const user = await this.usersRepository.findByEmail(dto.email);
@@ -143,49 +142,6 @@ export class AuthService {
       );
     }
 
-    // Send OTP
-    const { expiresAt } = await this.otpService.createAndSendOtp(
-      user._id.toString(),
-      user.email,
-      user.fullName,
-    );
-
-    this.logger.info({ userId: user._id.toString() }, 'OTP sent for login');
-
-    return new LoginInitResponseDto(user.email, expiresAt);
-  }
-
-  /**
-   * Verify OTP and complete login
-   */
-  async verifyOtpAndLogin(
-    dto: VerifyOtpDto,
-    requestMetadata?: { ip?: string; userAgent?: string },
-  ): Promise<{ response: LoginResponseDto; cookies: CookieOptions }> {
-    this.logger.info({ email: dto.email }, 'Verifying OTP');
-
-    // Find user by email
-    const user = await this.usersRepository.findByEmail(dto.email);
-    
-    if (!user) {
-      this.logger.warn({ email: dto.email }, 'OTP verification failed: user not found');
-      throw new AuthenticationException(
-        ErrorCodes.AUTH_INVALID_CREDENTIALS,
-        'Invalid verification request',
-      );
-    }
-
-    // Verify OTP
-    const isOtpValid = await this.otpService.verifyOtp(user._id.toString(), dto.otp);
-    
-    if (!isOtpValid) {
-      this.logger.warn({ email: dto.email }, 'OTP verification failed: invalid or expired OTP');
-      throw new AuthenticationException(
-        ErrorCodes.AUTH_OTP_INVALID,
-        'Invalid or expired OTP. Please request a new one.',
-      );
-    }
-
     // Update last login
     await this.usersRepository.updateLastLogin(user._id);
 
@@ -198,7 +154,7 @@ export class AuthService {
       dto.rememberMe,
     );
 
-    this.logger.info({ userId: user._id.toString() }, 'Login successful after OTP verification');
+    this.logger.info({ userId: user._id.toString() }, 'Login successful');
 
     const userResponse = new AuthUserResponseDto({
       id: user._id.toString(),
@@ -212,32 +168,6 @@ export class AuthService {
       response: new LoginResponseDto(userResponse),
       cookies,
     };
-  }
-
-  /**
-   * Resend OTP
-   */
-  async resendOtp(dto: ResendOtpDto): Promise<ResendOtpResponseDto> {
-    this.logger.info({ email: dto.email }, 'Resending OTP');
-
-    const user = await this.usersRepository.findByEmail(dto.email);
-    
-    if (!user) {
-      // Don't reveal if user exists or not
-      this.logger.warn({ email: dto.email }, 'Resend OTP: user not found');
-      throw new AuthenticationException(
-        ErrorCodes.AUTH_INVALID_CREDENTIALS,
-        'If an account exists with this email, a new OTP will be sent.',
-      );
-    }
-
-    const { expiresAt } = await this.otpService.resendOtp(
-      user._id.toString(),
-      user.email,
-      user.fullName,
-    );
-
-    return new ResendOtpResponseDto(user.email, expiresAt);
   }
 
   /**

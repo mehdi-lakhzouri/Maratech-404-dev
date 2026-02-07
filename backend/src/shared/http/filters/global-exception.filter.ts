@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import {
   ExceptionFilter,
   Catch,
@@ -30,7 +31,7 @@ export class GlobalExceptionFilter implements ExceptionFilter {
       status = exception.getStatus();
       const exceptionResponse = exception.getResponse() as any;
       errorResponse = exceptionResponse;
-      
+
       // Log at appropriate level based on status
       if (status >= 500) {
         this.logger.error({
@@ -54,10 +55,9 @@ export class GlobalExceptionFilter implements ExceptionFilter {
       // Standard NestJS HTTP exceptions
       status = exception.getStatus();
       const exceptionResponse = exception.getResponse();
-      
+
       if (typeof exceptionResponse === 'object' && exceptionResponse !== null) {
         const resp = exceptionResponse as any;
-        
         // Handle class-validator errors
         if (resp.message && Array.isArray(resp.message)) {
           errorResponse = createErrorResponse(

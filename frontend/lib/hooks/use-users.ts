@@ -52,11 +52,12 @@ export const usersKeys = {
 /**
  * Get paginated users list
  */
-export function useUsers(params: UsersQueryParams = {}) {
+export function useUsers(params: UsersQueryParams = {}, options?: { enabled?: boolean }) {
   return useQuery({
     queryKey: usersKeys.list(params),
     queryFn: () => getUsers(params),
     staleTime: 30 * 1000, // 30 seconds
+    enabled: options?.enabled !== false, // Default to true
   });
 }
 

@@ -12,7 +12,7 @@ import {
 import type { Request, Response } from 'express';
 import { ConfigService } from '@nestjs/config';
 import { AuthService } from './auth.service';
-import { LoginDto, RegisterDto, VerifyOtpDto, ResendOtpDto } from './dto/auth.dto';
+import { LoginDto, RegisterDto } from './dto/auth.dto';
 import { Public } from './decorators/public.decorator';
 import { CurrentUser } from './decorators/current-user.decorator';
 import { JwtAuthGuard } from './guards/jwt-auth.guard';
@@ -49,28 +49,17 @@ export class AuthController {
 
   /**
    * POST /api/v1/auth/login
-   * Initiate login - validate credentials and send OTP
+   * Login with email and password
    */
   @Public()
   @Post('login')
   @HttpCode(HttpStatus.OK)
-  async login(@Body() dto: LoginDto) {
-    return this.authService.loginInitiate(dto);
-  }
-
-  /**
-   * POST /api/v1/auth/verify-otp
-   * Verify OTP and complete login
-   */
-  @Public()
-  @Post('verify-otp')
-  @HttpCode(HttpStatus.OK)
-  async verifyOtp(
-    @Body() dto: VerifyOtpDto,
+  async login(
+    @Body() dto: LoginDto,
     @Req() req: Request,
     @Res({ passthrough: true }) res: Response,
   ) {
-    const result = await this.authService.verifyOtpAndLogin(dto, {
+    const result = await this.authService.login(dto, {
       ip: req.ip,
       userAgent: req.headers['user-agent'],
     });
@@ -78,17 +67,6 @@ export class AuthController {
     this.setCookies(res, result.cookies);
 
     return result.response;
-  }
-
-  /**
-   * POST /api/v1/auth/resend-otp
-   * Resend OTP to user's email
-   */
-  @Public()
-  @Post('resend-otp')
-  @HttpCode(HttpStatus.OK)
-  async resendOtp(@Body() dto: ResendOtpDto) {
-    return this.authService.resendOtp(dto);
   }
 
   /**
