@@ -9,7 +9,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import { useCreateMeeting } from "@/lib/api/meetings";
 import { useGetProjects } from "@/lib/api/projects";
 import { useGetUsers } from "@/lib/api/users";
-import { UserSelector } from "@/components/meetings/user-selector"; // Check this path!
+import { UserSelector } from "@/components/meetings/user-selector";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -36,6 +36,21 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
+
+// Helper component for Accessible Required Label (RGAA)
+function RequiredLabel({ children }: { children: React.ReactNode }) {
+  return (
+    <FormLabel>
+      {children}
+      {/* Visual Star (Hidden from Screen Readers) */}
+      <span className="text-destructive ml-1" aria-hidden="true">
+        *
+      </span>
+      {/* Text for Screen Readers Only */}
+      <span className="sr-only"> (champ obligatoire)</span>
+    </FormLabel>
+  );
+}
 
 const createMeetingSchema = z
   .object({
@@ -75,15 +90,10 @@ export function CreateMeetingModal({
   const queryClient = useQueryClient();
   const createMeeting = useCreateMeeting();
 
-  // API Hooks
   const { data: projects, isLoading: isLoadingProjects } = useGetProjects();
-  const {
-    data: usersData,
-    isLoading: isLoadingUsers,
-    error: usersError,
-  } = useGetUsers();
+  const { data: usersData, isLoading: isLoadingUsers } = useGetUsers();
 
-  // ✅ FIX: Extract from the 'users' property based on your API response
+  // Safe Data Extraction
   const usersList = Array.isArray(usersData)
     ? usersData
     : (usersData as any)?.users || (usersData as any)?.data || [];
@@ -133,31 +143,6 @@ export function CreateMeetingModal({
 
         <ScrollArea className="h-[80vh]">
           <div className="px-6 pb-6 pt-2">
-            {/* 🔍 SAFE DEBUG BOX */}
-            {(usersError || usersList.length === 0) && (
-              <div className="mb-4 p-3 rounded text-sm bg-slate-100 border border-slate-300">
-                <p className="font-bold text-slate-700">Debug Info:</p>
-                {usersError ? (
-                  <p className="text-destructive font-bold">
-                    API Error: {usersError.message}
-                  </p>
-                ) : (
-                  <>
-                    <p>Loading: {isLoadingUsers ? "Yes" : "No"}</p>
-                    <p>Users Found: {usersList.length}</p>
-                    <p className="text-xs text-muted-foreground mt-1">
-                      {/* ✅ FIX: Handles undefined data safely */}
-                      Raw Data:{" "}
-                      {usersData
-                        ? JSON.stringify(usersData).slice(0, 100)
-                        : "Undefined"}
-                      ...
-                    </p>
-                  </>
-                )}
-              </div>
-            )}
-
             <Form {...form}>
               <form
                 onSubmit={form.handleSubmit(onSubmit)}
@@ -169,13 +154,14 @@ export function CreateMeetingModal({
                   name="subject"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>
-                        Sujet <span className="text-destructive">*</span>
-                      </FormLabel>
+                      {/* ✅ Uses the new accessible label component */}
+                      <RequiredLabel>Sujet</RequiredLabel>
                       <FormControl>
                         <Input
                           placeholder="Exemple: Réunion de planification Q1"
                           {...field}
+                          // RGAA: Autocomplete helps users fill forms faster
+                          autoComplete="off"
                         />
                       </FormControl>
                       <FormMessage />
@@ -189,10 +175,7 @@ export function CreateMeetingModal({
                   name="scheduledAt"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>
-                        Date et heure{" "}
-                        <span className="text-destructive">*</span>
-                      </FormLabel>
+                      <RequiredLabel>Date et heure</RequiredLabel>
                       <FormControl>
                         <Input
                           type="datetime-local"
@@ -217,7 +200,7 @@ export function CreateMeetingModal({
                         onValueChange={field.onChange}
                       >
                         <FormControl>
-                          <SelectTrigger>
+                          <SelectTrigger aria-label="Sélectionner un projet">
                             <SelectValue placeholder="Sélectionnez un projet" />
                           </SelectTrigger>
                         </FormControl>
@@ -278,9 +261,12 @@ export function CreateMeetingModal({
                   )}
                 />
 
-                {/* API Error Message */}
+                {/* API Error Message (Role=alert for screen readers) */}
                 {createMeeting.isError && (
-                  <div className="text-destructive text-sm font-medium p-2 bg-destructive/10 rounded">
+                  <div
+                    role="alert"
+                    className="text-destructive text-sm font-medium p-2 bg-destructive/10 rounded"
+                  >
                     ❌ Erreur : {createMeeting.error?.message}
                   </div>
                 )}
