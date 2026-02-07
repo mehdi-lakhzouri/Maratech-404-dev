@@ -19,20 +19,23 @@ Documentation Swagger automatique : `http://localhost:8000/docs`
 ### 💬 Q&A (Questions-Réponses)
 
 #### `POST /ask`
+
 Poser une question au système RAG.
 
 **Request :**
+
 ```json
 {
   "question": "Quel est le budget de TILI ?",
   "chat_history": [
-    {"role": "user", "content": "Bonjour"},
-    {"role": "assistant", "content": "Bonjour ! Comment puis-je vous aider ?"}
+    { "role": "user", "content": "Bonjour" },
+    { "role": "assistant", "content": "Bonjour ! Comment puis-je vous aider ?" }
   ]
 }
 ```
 
 **Response :**
+
 ```json
 {
   "answer": "Selon le rapport financier...",
@@ -52,9 +55,11 @@ Poser une question au système RAG.
 ```
 
 #### `GET /ask/stream?question=...`
+
 Streaming SSE (Server-Sent Events) pour réponses en temps réel.
 
 **Events :**
+
 - `token` — Un token de la réponse
 - `done` — Fin de la réponse
 - `error` — Erreur
@@ -62,6 +67,7 @@ Streaming SSE (Server-Sent Events) pour réponses en temps réel.
 ### 📝 Résumé
 
 #### `POST /summarize`
+
 Résumer un document spécifique.
 
 **Request :** `{"filename": "CR_001_Reunion.pdf"}`
@@ -69,6 +75,7 @@ Résumer un document spécifique.
 **Response :** `{"filename": "...", "summary": "## Résumé\n..."}`
 
 #### `GET /summarize/all`
+
 Résumer tous les documents indexés.
 
 **Response :** `{"summaries": [{"filename": "...", "summary": "..."}]}`
@@ -76,9 +83,11 @@ Résumer tous les documents indexés.
 ### 📄 Documents
 
 #### `GET /documents`
+
 Lister tous les documents indexés avec métadonnées.
 
 **Response :**
+
 ```json
 [
   {
@@ -90,11 +99,13 @@ Lister tous les documents indexés avec métadonnées.
 ```
 
 #### `POST /upload`
+
 Uploader un PDF : sauvegarde, classification automatique, ingestion dans le vector store.
 
 **Request :** `multipart/form-data` avec champ `file` (PDF uniquement)
 
 **Response :**
+
 ```json
 {
   "filename": "nouveau_doc.pdf",
@@ -106,6 +117,7 @@ Uploader un PDF : sauvegarde, classification automatique, ingestion dans le vect
 ```
 
 #### `DELETE /documents/{filename}`
+
 Supprimer un document du vector store, du disque, et du cache de captions.
 
 **Response :** `{"filename": "...", "chunks_deleted": 5, "message": "..."}`
@@ -113,9 +125,11 @@ Supprimer un document du vector store, du disque, et du cache de captions.
 ### 📷 Images
 
 #### `GET /documents/{filename}/images`
+
 Obtenir les descriptions IA des images contenues dans un PDF.
 
 **Response :**
+
 ```json
 {
   "filename": "rapport.pdf",
@@ -137,9 +151,11 @@ Obtenir les descriptions IA des images contenues dans un PDF.
 ### ❤️ Santé
 
 #### `GET /health`
+
 Vérification de l'état du système.
 
 **Response :**
+
 ```json
 {
   "status": "ok",
@@ -154,6 +170,7 @@ Vérification de l'état du système.
 ## Middleware CORS
 
 Origines autorisées :
+
 - `http://localhost:3000`
 - `http://localhost:5173`
 - `http://127.0.0.1:3000`
@@ -166,6 +183,7 @@ Origines autorisées :
 ## Startup (Lifespan)
 
 Au démarrage, l'API :
+
 1. Charge le vector store ChromaDB
 2. Crée la chain RAG (LLM + contextualization + retrieval)
 3. Log le nombre de vecteurs chargés

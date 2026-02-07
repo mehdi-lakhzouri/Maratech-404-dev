@@ -7,10 +7,10 @@ FROM node:20-alpine AS build
 
 WORKDIR /app
 
-COPY package.json package-lock.json ./
+COPY web/package.json web/package-lock.json ./
 RUN npm ci
 
-COPY . .
+COPY web/ .
 
 # Build with API URL pointing to the backend service
 ARG VITE_API_URL=http://localhost:8000
@@ -25,7 +25,7 @@ FROM nginx:alpine
 RUN rm /etc/nginx/conf.d/default.conf
 
 # Copy custom nginx config
-COPY nginx.conf /etc/nginx/conf.d/default.conf
+COPY web/nginx.conf /etc/nginx/conf.d/default.conf
 
 # Copy built React app
 COPY --from=build /app/dist /usr/share/nginx/html

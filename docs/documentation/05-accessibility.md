@@ -8,34 +8,34 @@ TILI est conçu avec l'accessibilité comme priorité. Le système supporte les 
 
 ### 👁️ Utilisateurs aveugles / malvoyants
 
-| Fonctionnalité | Composant | Description |
-|---|---|---|
-| **TTS (Text-to-Speech)** | `useSpeech.js` | Lecture à voix haute des réponses, résumés, annonces |
-| **STT (Speech-to-Text)** | `useSpeech.js` | Dictée vocale pour poser des questions |
-| **Commandes vocales** | `useVoiceCommands.js` | Navigation et actions entièrement par la voix |
-| **Audio Onboarding** | `AudioOnboarding.jsx` | Première visite : détection du mode audio souhaité |
-| **Audio Guide** | `useAudioGuide.js` | Description audio automatique de chaque page |
-| **Image Captioning** | `image_captioner.py` | Description IA des images dans les PDFs |
-| **ARIA Labels** | Tous composants | Labels sémantiques pour lecteurs d'écran |
-| **Skip to Content** | `App.jsx` | Lien "Aller au contenu principal" pour les lecteurs d'écran |
-| **Live Regions** | `AccessibilityToolbar.jsx` | Annonces aria-live pour les changements dynamiques |
-| **Earcons** | `useAudioGuide.js` | Sons de feedback (clic, succès, erreur, navigation) |
+| Fonctionnalité           | Composant                  | Description                                                 |
+| ------------------------ | -------------------------- | ----------------------------------------------------------- |
+| **TTS (Text-to-Speech)** | `useSpeech.js`             | Lecture à voix haute des réponses, résumés, annonces        |
+| **STT (Speech-to-Text)** | `useSpeech.js`             | Dictée vocale pour poser des questions                      |
+| **Commandes vocales**    | `useVoiceCommands.js`      | Navigation et actions entièrement par la voix               |
+| **Audio Onboarding**     | `AudioOnboarding.jsx`      | Première visite : détection du mode audio souhaité          |
+| **Audio Guide**          | `useAudioGuide.js`         | Description audio automatique de chaque page                |
+| **Image Captioning**     | `image_captioner.py`       | Description IA des images dans les PDFs                     |
+| **ARIA Labels**          | Tous composants            | Labels sémantiques pour lecteurs d'écran                    |
+| **Skip to Content**      | `App.jsx`                  | Lien "Aller au contenu principal" pour les lecteurs d'écran |
+| **Live Regions**         | `AccessibilityToolbar.jsx` | Annonces aria-live pour les changements dynamiques          |
+| **Earcons**              | `useAudioGuide.js`         | Sons de feedback (clic, succès, erreur, navigation)         |
 
 ### 🖐️ Utilisateurs avec handicaps moteurs
 
-| Fonctionnalité | Composant | Description |
-|---|---|---|
-| **Navigation clavier** | `App.jsx` | Raccourcis Alt+1/2/D/V/H pour toute l'app |
-| **Commandes vocales** | `useVoiceCommands.js` | Contrôle total de l'app par la voix |
-| **Focus management** | Tous composants | Ordre de tabulation logique, focus visible |
+| Fonctionnalité         | Composant             | Description                                |
+| ---------------------- | --------------------- | ------------------------------------------ |
+| **Navigation clavier** | `App.jsx`             | Raccourcis Alt+1/2/D/V/H pour toute l'app  |
+| **Commandes vocales**  | `useVoiceCommands.js` | Contrôle total de l'app par la voix        |
+| **Focus management**   | Tous composants       | Ordre de tabulation logique, focus visible |
 
 ### 🧠 Utilisateurs avec handicaps cognitifs
 
-| Fonctionnalité | Composant | Description |
-|---|---|---|
-| **Résumés IA** | `rag_chain.py` | Résumés structurés et concis des documents |
+| Fonctionnalité              | Composant           | Description                                       |
+| --------------------------- | ------------------- | ------------------------------------------------- |
+| **Résumés IA**              | `rag_chain.py`      | Résumés structurés et concis des documents        |
 | **Classification visuelle** | `DocumentsPage.jsx` | Documents regroupés par type avec icônes/couleurs |
-| **Interface épurée** | Design | Interface minimaliste, pas de surcharge visuelle |
+| **Interface épurée**        | Design              | Interface minimaliste, pas de surcharge visuelle  |
 
 ## Barre d'outils d'accessibilité (`AccessibilityToolbar.jsx`)
 
@@ -60,6 +60,7 @@ stop();
 ```
 
 **Caractéristiques :**
+
 - **Chunking intelligent** : Découpe le texte en morceaux de ~150 mots pour éviter les coupures Chrome
 - **Nettoyage Markdown** : Supprime les balises Markdown avant la lecture
 - **Voix française** : Sélection automatique de la meilleure voix FR disponible
@@ -69,14 +70,16 @@ stop();
 ### Hook `useSTT()`
 
 ```javascript
-const { startListening, stopListening, isListening, transcript, isSupported } = useSTT({
-  lang: "fr-FR",
-  onResult: (text) => console.log("Entendu:", text),
-  continuous: true,
-});
+const { startListening, stopListening, isListening, transcript, isSupported } =
+  useSTT({
+    lang: "fr-FR",
+    onResult: (text) => console.log("Entendu:", text),
+    continuous: true,
+  });
 ```
 
 **Caractéristiques :**
+
 - Utilise l'API Web Speech (navigateur)
 - Mode continu pour les commandes vocales
 - Callback `onResult` via ref (pas de re-render)
@@ -92,12 +95,13 @@ Lit automatiquement une description de la page lors de la première visite :
 useAudioGuide(
   "Page de chat. Posez une question à l'assistant IA.",
   isDocumentsPage,
-  false,   // autoSpeak
-  1200     // delay ms
+  false, // autoSpeak
+  1200, // delay ms
 );
 ```
 
 **Caractéristiques :**
+
 - Lecture automatique uniquement à la première visite (localStorage)
 - Délai configurable
 - Sons de feedback (`playSound`) : clic, succès, erreur, navigation, alerte
@@ -105,11 +109,11 @@ useAudioGuide(
 ### Earcons (sons de feedback)
 
 ```javascript
-playSound("click");      // Bip court
-playSound("success");    // Son montant
-playSound("error");      // Son descendant  
+playSound("click"); // Bip court
+playSound("success"); // Son montant
+playSound("error"); // Son descendant
 playSound("navigation"); // Double bip
-playSound("alert");      // Triple bip
+playSound("alert"); // Triple bip
 ```
 
 Générés via Web Audio API (`OscillatorNode`), aucun fichier audio nécessaire.

@@ -23,50 +23,50 @@ EMBEDDING_PROVIDER=huggingface
 
 ### Chemins
 
-| Variable | Valeur | Description |
-|---|---|---|
-| `RAG_DIR` | `RAG/` | Dossier du module RAG |
-| `PROJECT_ROOT` | Racine du projet | Dossier parent de RAG/ |
-| `PDF_SOURCE_DIR` | `docs/pdf/` | Dossier source des PDFs |
+| Variable             | Valeur           | Description                  |
+| -------------------- | ---------------- | ---------------------------- |
+| `RAG_DIR`            | `RAG/`           | Dossier du module RAG        |
+| `PROJECT_ROOT`       | Racine du projet | Dossier parent de RAG/       |
+| `PDF_SOURCE_DIR`     | `docs/pdf/`      | Dossier source des PDFs      |
 | `CHROMA_PERSIST_DIR` | `RAG/chroma_db/` | Stockage persistant ChromaDB |
 
 ### LLM (via OpenRouter)
 
-| Variable | Valeur par défaut | Description |
-|---|---|---|
-| `LLM_MODEL` | `openai/gpt-4o-mini` | Modèle utilisé pour les réponses |
-| `LLM_TEMPERATURE` | `0.1` | Contrôle la créativité (0 = déterministe) |
-| `LLM_MAX_TOKENS` | `400` | Nombre max de tokens par réponse |
-| `OPENAI_API_KEY` | depuis `.env` | Clé API OpenRouter |
-| `OPENAI_BASE_URL` | depuis `.env` | URL de l'API (OpenRouter) |
+| Variable          | Valeur par défaut    | Description                               |
+| ----------------- | -------------------- | ----------------------------------------- |
+| `LLM_MODEL`       | `openai/gpt-4o-mini` | Modèle utilisé pour les réponses          |
+| `LLM_TEMPERATURE` | `0.1`                | Contrôle la créativité (0 = déterministe) |
+| `LLM_MAX_TOKENS`  | `400`                | Nombre max de tokens par réponse          |
+| `OPENAI_API_KEY`  | depuis `.env`        | Clé API OpenRouter                        |
+| `OPENAI_BASE_URL` | depuis `.env`        | URL de l'API (OpenRouter)                 |
 
 ### Embeddings
 
-| Variable | Valeur par défaut | Description |
-|---|---|---|
-| `EMBEDDING_PROVIDER` | `huggingface` | `huggingface` (gratuit, local) ou `openai` (payant) |
-| `HUGGINGFACE_MODEL` | `all-MiniLM-L6-v2` | Modèle d'embeddings HuggingFace |
-| `OPENAI_EMBEDDING_MODEL` | `text-embedding-3-small` | Modèle d'embeddings OpenAI (si choisi) |
+| Variable                 | Valeur par défaut        | Description                                         |
+| ------------------------ | ------------------------ | --------------------------------------------------- |
+| `EMBEDDING_PROVIDER`     | `huggingface`            | `huggingface` (gratuit, local) ou `openai` (payant) |
+| `HUGGINGFACE_MODEL`      | `all-MiniLM-L6-v2`       | Modèle d'embeddings HuggingFace                     |
+| `OPENAI_EMBEDDING_MODEL` | `text-embedding-3-small` | Modèle d'embeddings OpenAI (si choisi)              |
 
 ### Chunking
 
-| Variable | Valeur | Description |
-|---|---|---|
-| `CHUNK_SIZE` | `1500` | Taille max d'un chunk en caractères |
-| `CHUNK_OVERLAP` | `300` | Chevauchement entre chunks consécutifs |
-| `SEPARATORS` | `["\n\n", "\n", ". ", " ", ""]` | Séparateurs pour le découpage progressif |
+| Variable        | Valeur                          | Description                              |
+| --------------- | ------------------------------- | ---------------------------------------- |
+| `CHUNK_SIZE`    | `1500`                          | Taille max d'un chunk en caractères      |
+| `CHUNK_OVERLAP` | `300`                           | Chevauchement entre chunks consécutifs   |
+| `SEPARATORS`    | `["\n\n", "\n", ". ", " ", ""]` | Séparateurs pour le découpage progressif |
 
 ### Retrieval
 
-| Variable | Valeur | Description |
-|---|---|---|
-| `RETRIEVAL_K` | `3` | Nombre de chunks récupérés par requête |
-| `SCORE_THRESHOLD` | `0.8` | Seuil de distance (au-dessus = faible pertinence) |
+| Variable          | Valeur | Description                                       |
+| ----------------- | ------ | ------------------------------------------------- |
+| `RETRIEVAL_K`     | `3`    | Nombre de chunks récupérés par requête            |
+| `SCORE_THRESHOLD` | `0.8`  | Seuil de distance (au-dessus = faible pertinence) |
 
 ### Collection ChromaDB
 
-| Variable | Valeur | Description |
-|---|---|---|
+| Variable                 | Valeur           | Description                        |
+| ------------------------ | ---------------- | ---------------------------------- |
 | `CHROMA_COLLECTION_NAME` | `tili_documents` | Nom de la collection dans ChromaDB |
 
 ## Variables frontend (`web/`)
@@ -96,15 +96,15 @@ RAG/
 
 ## Makefile
 
-| Commande | Description |
-|---|---|
-| `make install` | Installer toutes les dépendances (Python + Node.js) |
-| `make ingest` | Lancer le pipeline d'ingestion des PDFs |
-| `make api` | Démarrer le serveur FastAPI (port 8000) |
-| `make web` | Démarrer le serveur React (port 3000/5173) |
-| `make dev` | Démarrer API + Web en parallèle |
-| `make test-query` | Test rapide de l'API (/health + /ask) |
-| `make clean` | Nettoyer les fichiers générés (ChromaDB, node_modules, __pycache__) |
+| Commande          | Description                                                         |
+| ----------------- | ------------------------------------------------------------------- |
+| `make install`    | Installer toutes les dépendances (Python + Node.js)                 |
+| `make ingest`     | Lancer le pipeline d'ingestion des PDFs                             |
+| `make api`        | Démarrer le serveur FastAPI (port 8000)                             |
+| `make web`        | Démarrer le serveur React (port 3000/5173)                          |
+| `make dev`        | Démarrer API + Web en parallèle                                     |
+| `make test-query` | Test rapide de l'API (/health + /ask)                               |
+| `make clean`      | Nettoyer les fichiers générés (ChromaDB, node_modules, **pycache**) |
 
 ## Dépendances
 
@@ -125,6 +125,7 @@ duckduckgo-search>=6.0.0
 ```
 
 **Dépendances supplémentaires (API) :**
+
 ```
 fastapi
 uvicorn[standard]

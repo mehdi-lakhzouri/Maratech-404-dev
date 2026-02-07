@@ -28,6 +28,7 @@ Microphone → Web Speech API (STT) → Transcription
 ### 1. Normalisation
 
 Chaque transcription est normalisée :
+
 - Conversion en minuscules
 - Suppression des accents (`é` → `e`, `à` → `a`)
 - Suppression de la ponctuation
@@ -68,33 +69,37 @@ Seuil minimum : `FUZZY_THRESHOLD = 0.72`
 ## Commandes disponibles
 
 ### Navigation
-| Commande | Synonymes (exemples) | Action |
-|---|---|---|
-| Aller au chat | "page chat", "ouvre le chat", "va au chat" | Navigate → `/` |
+
+| Commande            | Synonymes (exemples)                                | Action                  |
+| ------------------- | --------------------------------------------------- | ----------------------- |
+| Aller au chat       | "page chat", "ouvre le chat", "va au chat"          | Navigate → `/`          |
 | Aller aux documents | "page documents", "mes fichiers", "liste documents" | Navigate → `/documents` |
 
 ### Chat
-| Commande | Synonymes | Action |
-|---|---|---|
-| Demander [question] | "pose la question", "cherche", "interroge" | Submit question to RAG |
-| Nouvelle conversation | "reset chat", "effacer", "recommencer" | Clear chat history |
-| Écouter la réponse | "lis la réponse", "lecture", "parle" | TTS read last answer |
-| Arrêter la lecture | "stop", "tais-toi", "silence", "arrête" | Stop TTS |
-| Aide vocale | "commandes", "aide", "que peux-tu faire" | Read help text |
+
+| Commande              | Synonymes                                  | Action                 |
+| --------------------- | ------------------------------------------ | ---------------------- |
+| Demander [question]   | "pose la question", "cherche", "interroge" | Submit question to RAG |
+| Nouvelle conversation | "reset chat", "effacer", "recommencer"     | Clear chat history     |
+| Écouter la réponse    | "lis la réponse", "lecture", "parle"       | TTS read last answer   |
+| Arrêter la lecture    | "stop", "tais-toi", "silence", "arrête"    | Stop TTS               |
+| Aide vocale           | "commandes", "aide", "que peux-tu faire"   | Read help text         |
 
 ### Documents
-| Commande | Synonymes | Action |
-|---|---|---|
-| Résumer document N | "résumé premier", "ouvre document 2" | Summarize Nth document |
-| Uploader | "ajouter fichier", "importer", "charger" | Trigger file upload |
-| Supprimer document N | "efface document 3", "retire" | Delete Nth document |
-| Lire résumé | "lis le résumé", "écoute résumé" | TTS read current summary |
+
+| Commande             | Synonymes                                | Action                   |
+| -------------------- | ---------------------------------------- | ------------------------ |
+| Résumer document N   | "résumé premier", "ouvre document 2"     | Summarize Nth document   |
+| Uploader             | "ajouter fichier", "importer", "charger" | Trigger file upload      |
+| Supprimer document N | "efface document 3", "retire"            | Delete Nth document      |
+| Lire résumé          | "lis le résumé", "écoute résumé"         | TTS read current summary |
 
 ### Interface
-| Commande | Synonymes | Action |
-|---|---|---|
-| Mode sombre | "thème sombre", "dark mode", "nuit" | Toggle dark mode |
-| Mode clair | "thème clair", "light mode", "jour" | Toggle light mode |
+
+| Commande    | Synonymes                           | Action            |
+| ----------- | ----------------------------------- | ----------------- |
+| Mode sombre | "thème sombre", "dark mode", "nuit" | Toggle dark mode  |
+| Mode clair  | "thème clair", "light mode", "jour" | Toggle light mode |
 
 ## Extraction d'ordinaux
 
@@ -109,15 +114,15 @@ Le système comprend les ordinaux en français pour les commandes "document N" :
 
 ```javascript
 const {
-  isActive,         // boolean — commandes vocales actives ?
-  lastCommand,      // string — dernière commande reconnue
-  transcript,       // string — transcription brute
-  lastHeard,        // string — dernière phrase entendue
-  unrecognized,     // string — dernière phrase non reconnue
-  start,            // () => void — démarrer l'écoute
-  stop,             // () => void — arrêter l'écoute
-  toggle,           // () => void — basculer on/off
-  isSupported,      // boolean — Web Speech API disponible ?
+  isActive, // boolean — commandes vocales actives ?
+  lastCommand, // string — dernière commande reconnue
+  transcript, // string — transcription brute
+  lastHeard, // string — dernière phrase entendue
+  unrecognized, // string — dernière phrase non reconnue
+  start, // () => void — démarrer l'écoute
+  stop, // () => void — arrêter l'écoute
+  toggle, // () => void — basculer on/off
+  isSupported, // boolean — Web Speech API disponible ?
 } = useVoiceCommands({
   onNavigate: (path) => navigate(path),
   onChatAsk: (question) => submitQuestion(question),
@@ -135,6 +140,7 @@ const {
 ## Indicateur visuel (`VoiceCommandIndicator.jsx`)
 
 Badge flottant en bas de l'écran quand les commandes vocales sont actives :
+
 - Affiche la transcription en temps réel
 - Affiche la dernière commande reconnue (vert)
 - Affiche les phrases non reconnues (orange)

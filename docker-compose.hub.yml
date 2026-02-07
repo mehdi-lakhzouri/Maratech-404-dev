@@ -1,33 +1,23 @@
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-#  TILI RAG — Docker Compose
+#  TILI RAG — Docker Compose (Pre-built Images)
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+#  For users pulling from Docker Hub
 #  Usage:
-#    docker-compose up --build        # Build & start
-#    docker-compose up -d             # Start in background
-#    docker-compose down              # Stop
-#    docker-compose logs -f api       # Follow API logs
+#    docker-compose up        # Start
+#    docker-compose down      # Stop
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 services:
   # ── Backend: FastAPI + RAG Pipeline ──
   api:
-    build:
-      context: .
-      dockerfile: api/Dockerfile
+    image: fedihmida/hackathon:api
     container_name: tili-api
     ports:
       - "8000:8000"
-    environment:
-      - OPENAI_API_KEY=${OPENAI_API_KEY}
-      - OPENROUTER_BASE_URL=${OPENROUTER_BASE_URL:-https://openrouter.ai/api/v1}
-      - EMBEDDING_PROVIDER=${EMBEDDING_PROVIDER:-huggingface}
+    env_file: .env
     volumes:
-      # Persist vector store between restarts
       - chroma_data:/app/RAG/chroma_db
-      # Persist uploaded PDFs
-      - pdf_data:/app/docs/pdf
-      # Persist image caption cache
-      - captions_data:/app/docs/captions
+      - ./pdf:/app/docs/pdf
     restart: unless-stopped
     healthcheck:
       test:
@@ -40,25 +30,16 @@ services:
       interval: 30s
       timeout: 10s
       retries: 3
-      start_period: 60s
 
   # ── Frontend: React + Nginx ──
   web:
-    build:
-      context: ./web
-      dockerfile: Dockerfile
-      args:
-        # In Docker, the browser calls /api/* which nginx proxies to http://api:8000
-        VITE_API_URL: ""
+    image: fedihmida/hackathon:web
     container_name: tili-web
     ports:
-      - "80:80"
+      - "3000:80"
     depends_on:
-      api:
-        condition: service_healthy
+      - api
     restart: unless-stopped
 
 volumes:
   chroma_data:
-  pdf_data:
-  captions_data:

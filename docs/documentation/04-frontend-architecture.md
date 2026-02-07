@@ -6,13 +6,13 @@ L'interface utilisateur TILI est une **SPA (Single Page Application)** construit
 
 ## Stack technique
 
-| Technologie | Version | Rôle |
-|---|---|---|
-| React | 18.3 | Bibliothèque UI |
-| Vite | 6.0 | Build tool & dev server |
-| TailwindCSS | 3.4 | Framework CSS utility-first |
-| React Router | 6.28 | Routing SPA |
-| React Markdown | 9.0 | Rendu Markdown dans les réponses |
+| Technologie    | Version | Rôle                             |
+| -------------- | ------- | -------------------------------- |
+| React          | 18.3    | Bibliothèque UI                  |
+| Vite           | 6.0     | Build tool & dev server          |
+| TailwindCSS    | 3.4     | Framework CSS utility-first      |
+| React Router   | 6.28    | Routing SPA                      |
+| React Markdown | 9.0     | Rendu Markdown dans les réponses |
 
 ## Structure des fichiers
 
@@ -43,6 +43,7 @@ web/src/
 ### ChatPage (`pages/ChatPage.jsx`)
 
 Interface de chat avec l'assistant IA :
+
 - **Streaming SSE** : Les réponses s'affichent token par token en temps réel
 - **Historique** : Conversation maintenue dans le state, envoyée au backend pour contextualisation
 - **Rendu Markdown** : Les réponses sont formatées en Markdown (titres, listes, gras, etc.)
@@ -53,6 +54,7 @@ Interface de chat avec l'assistant IA :
 ### DocumentsPage (`pages/DocumentsPage.jsx`)
 
 Gestion complète des documents :
+
 - **Liste groupée** : Documents regroupés par type avec icônes et couleurs
 - **Upload** : Drag & drop ou sélection de fichier PDF
 - **Résumé** : Génération de résumé IA par document (expansible)
@@ -62,20 +64,21 @@ Gestion complète des documents :
 
 ## Client API (`api.js`)
 
-| Fonction | Méthode | Endpoint |
-|---|---|---|
-| `askQuestion()` | POST | `/ask` |
-| `askStream()` | GET (SSE) | `/ask/stream` |
-| `getDocuments()` | GET | `/documents` |
-| `summarizeDocument()` | POST | `/summarize` |
-| `uploadDocument()` | POST | `/upload` |
-| `deleteDocument()` | DELETE | `/documents/{filename}` |
-| `getDocumentImages()` | GET | `/documents/{filename}/images` |
-| `getHealth()` | GET | `/health` |
+| Fonction              | Méthode   | Endpoint                       |
+| --------------------- | --------- | ------------------------------ |
+| `askQuestion()`       | POST      | `/ask`                         |
+| `askStream()`         | GET (SSE) | `/ask/stream`                  |
+| `getDocuments()`      | GET       | `/documents`                   |
+| `summarizeDocument()` | POST      | `/summarize`                   |
+| `uploadDocument()`    | POST      | `/upload`                      |
+| `deleteDocument()`    | DELETE    | `/documents/{filename}`        |
+| `getDocumentImages()` | GET       | `/documents/{filename}/images` |
+| `getHealth()`         | GET       | `/health`                      |
 
 ## App.jsx — Composant Racine
 
 Responsabilités :
+
 1. **Routing** : `BrowserRouter` avec routes `/` (Chat) et `/documents` (Documents)
 2. **Dark Mode** : Toggle clair/sombre avec state `dark`
 3. **Voice Commands** : Intégration globale via `useVoiceCommands` hook
@@ -85,13 +88,13 @@ Responsabilités :
 
 ### Raccourcis clavier globaux
 
-| Raccourci | Action |
-|---|---|
-| `Alt+1` | Naviguer vers la page Chat |
-| `Alt+2` | Naviguer vers la page Documents |
-| `Alt+D` | Toggle thème sombre |
-| `Alt+V` | Toggle commandes vocales |
-| `Alt+H` | Lire l'aide des raccourcis |
+| Raccourci | Action                          |
+| --------- | ------------------------------- |
+| `Alt+1`   | Naviguer vers la page Chat      |
+| `Alt+2`   | Naviguer vers la page Documents |
+| `Alt+D`   | Toggle thème sombre             |
+| `Alt+V`   | Toggle commandes vocales        |
+| `Alt+H`   | Lire l'aide des raccourcis      |
 
 ## Commandes Make
 

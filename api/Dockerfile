@@ -16,6 +16,10 @@ WORKDIR /app
 
 # Install Python dependencies first (cached layer)
 COPY RAG/requirements.txt /app/RAG/requirements.txt
+
+# OPTIMIZATION: Install CPU-only Torch first to avoid massive CUDA downloads (saves ~2GB)
+RUN pip install --no-cache-dir torch --index-url https://download.pytorch.org/whl/cpu
+
 RUN pip install --no-cache-dir -r RAG/requirements.txt \
     && pip install --no-cache-dir \
        fastapi \
@@ -23,7 +27,8 @@ RUN pip install --no-cache-dir -r RAG/requirements.txt \
        sse-starlette \
        PyMuPDF \
        Pillow \
-       requests
+       requests \
+       python-multipart
 
 # Copy application code
 COPY RAG/ /app/RAG/

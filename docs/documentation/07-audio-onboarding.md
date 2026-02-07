@@ -81,7 +81,9 @@ const handleOnboardingComplete = (chosenAudioMode) => {
 };
 
 // Dans le JSX
-{showOnboarding && <AudioOnboarding onComplete={handleOnboardingComplete} />}
+{
+  showOnboarding && <AudioOnboarding onComplete={handleOnboardingComplete} />;
+}
 ```
 
 ## Animations Tailwind

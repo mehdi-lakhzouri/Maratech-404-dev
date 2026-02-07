@@ -7,17 +7,17 @@
 
 ## 🗂️ Table des matières
 
-| # | Document | Description |
-|---|---|---|
-| 01 | [RAG Pipeline](documentation/01-rag-pipeline.md) | Architecture du pipeline RAG : ingestion, embeddings, retrieval, génération |
-| 02 | [Classification des Documents](documentation/02-document-classification.md) | Système de classification à 3 niveaux (35+ types) |
-| 03 | [API FastAPI](documentation/03-api-endpoints.md) | Tous les endpoints REST : Q&A, résumé, upload, documents, images, santé |
-| 04 | [Frontend React](documentation/04-frontend-architecture.md) | Architecture SPA : React 18, Vite 6, TailwindCSS, pages et composants |
-| 05 | [Accessibilité](documentation/05-accessibility.md) | TTS, STT, ARIA, navigation clavier, audio guide, earcons, standards WCAG |
-| 06 | [Commandes Vocales](documentation/06-voice-commands.md) | Moteur fuzzy matching (Levenshtein), toutes les commandes, indicateur visuel |
-| 07 | [Audio Onboarding](documentation/07-audio-onboarding.md) | Modal première visite, détection mode audio, design glass-morphism |
-| 08 | [Image Captioning](documentation/08-image-captioning.md) | Description IA des images PDF (GPT-4o-mini Vision), pipeline et cache |
-| 09 | [Configuration](documentation/09-configuration.md) | Variables d'environnement, config.py, dépendances, Makefile |
+| #   | Document                                                                    | Description                                                                  |
+| --- | --------------------------------------------------------------------------- | ---------------------------------------------------------------------------- |
+| 01  | [RAG Pipeline](documentation/01-rag-pipeline.md)                            | Architecture du pipeline RAG : ingestion, embeddings, retrieval, génération  |
+| 02  | [Classification des Documents](documentation/02-document-classification.md) | Système de classification à 3 niveaux (35+ types)                            |
+| 03  | [API FastAPI](documentation/03-api-endpoints.md)                            | Tous les endpoints REST : Q&A, résumé, upload, documents, images, santé      |
+| 04  | [Frontend React](documentation/04-frontend-architecture.md)                 | Architecture SPA : React 18, Vite 6, TailwindCSS, pages et composants        |
+| 05  | [Accessibilité](documentation/05-accessibility.md)                          | TTS, STT, ARIA, navigation clavier, audio guide, earcons, standards WCAG     |
+| 06  | [Commandes Vocales](documentation/06-voice-commands.md)                     | Moteur fuzzy matching (Levenshtein), toutes les commandes, indicateur visuel |
+| 07  | [Audio Onboarding](documentation/07-audio-onboarding.md)                    | Modal première visite, détection mode audio, design glass-morphism           |
+| 08  | [Image Captioning](documentation/08-image-captioning.md)                    | Description IA des images PDF (GPT-4o-mini Vision), pipeline et cache        |
+| 09  | [Configuration](documentation/09-configuration.md)                          | Variables d'environnement, config.py, dépendances, Makefile                  |
 
 ---
 
@@ -157,43 +157,45 @@ make web   # Terminal 2 — http://localhost:5173
 ## 🧪 Technologies utilisées
 
 ### Backend
-| Technologie | Rôle |
-|---|---|
-| Python 3.13 | Langage backend |
-| FastAPI | Framework API REST |
-| Uvicorn | Serveur ASGI |
-| LangChain | Orchestration RAG |
-| ChromaDB | Base vectorielle |
-| HuggingFace (all-MiniLM-L6-v2) | Embeddings (gratuit, local) |
-| OpenRouter / GPT-4o-mini | LLM pour Q&A, résumé, classification, captioning |
-| PyMuPDF | Extraction d'images PDF |
-| SSE-Starlette | Streaming Server-Sent Events |
+
+| Technologie                    | Rôle                                             |
+| ------------------------------ | ------------------------------------------------ |
+| Python 3.13                    | Langage backend                                  |
+| FastAPI                        | Framework API REST                               |
+| Uvicorn                        | Serveur ASGI                                     |
+| LangChain                      | Orchestration RAG                                |
+| ChromaDB                       | Base vectorielle                                 |
+| HuggingFace (all-MiniLM-L6-v2) | Embeddings (gratuit, local)                      |
+| OpenRouter / GPT-4o-mini       | LLM pour Q&A, résumé, classification, captioning |
+| PyMuPDF                        | Extraction d'images PDF                          |
+| SSE-Starlette                  | Streaming Server-Sent Events                     |
 
 ### Frontend
-| Technologie | Rôle |
-|---|---|
-| React 18 | Bibliothèque UI |
-| Vite 6 | Build tool |
-| TailwindCSS 3.4 | Framework CSS |
-| React Router 6 | Navigation SPA |
-| React Markdown | Rendu Markdown |
-| Web Speech API | TTS + STT natif navigateur |
+
+| Technologie     | Rôle                       |
+| --------------- | -------------------------- |
+| React 18        | Bibliothèque UI            |
+| Vite 6          | Build tool                 |
+| TailwindCSS 3.4 | Framework CSS              |
+| React Router 6  | Navigation SPA             |
+| React Markdown  | Rendu Markdown             |
+| Web Speech API  | TTS + STT natif navigateur |
 
 ## ♿ Accessibilité — Résumé
 
-| Fonctionnalité | Pour qui | Comment |
-|---|---|---|
-| TTS (lecture vocale) | Aveugles | Web Speech API |
-| STT (dictée vocale) | Aveugles, moteur | Web Speech API |
-| Commandes vocales | Aveugles, moteur | Fuzzy matching Levenshtein |
-| Audio Onboarding | Aveugles | Modal première visite |
-| Audio Guide | Aveugles | Description auto par page |
-| Image Captioning | Aveugles | GPT-4o-mini Vision |
-| Navigation clavier | Moteur, aveugles | Alt+1/2/D/V/H |
-| ARIA labels | Lecteurs écran | Attributs sémantiques |
-| Earcons | Aveugles | Web Audio API |
-| Résumés IA | Cognitif | LangChain |
-| Classification visuelle | Cognitif | Types + icônes + couleurs |
+| Fonctionnalité          | Pour qui         | Comment                    |
+| ----------------------- | ---------------- | -------------------------- |
+| TTS (lecture vocale)    | Aveugles         | Web Speech API             |
+| STT (dictée vocale)     | Aveugles, moteur | Web Speech API             |
+| Commandes vocales       | Aveugles, moteur | Fuzzy matching Levenshtein |
+| Audio Onboarding        | Aveugles         | Modal première visite      |
+| Audio Guide             | Aveugles         | Description auto par page  |
+| Image Captioning        | Aveugles         | GPT-4o-mini Vision         |
+| Navigation clavier      | Moteur, aveugles | Alt+1/2/D/V/H              |
+| ARIA labels             | Lecteurs écran   | Attributs sémantiques      |
+| Earcons                 | Aveugles         | Web Audio API              |
+| Résumés IA              | Cognitif         | LangChain                  |
+| Classification visuelle | Cognitif         | Types + icônes + couleurs  |
 
 ---
 

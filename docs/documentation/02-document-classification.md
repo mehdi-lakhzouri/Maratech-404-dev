@@ -42,6 +42,7 @@ Si les Tiers 1 et 2 échouent, le contenu est envoyé au LLM (GPT-4o-mini) avec 
 ## Types de documents supportés (35+)
 
 ### Types principaux TILI
+
 - Compte-Rendu
 - Rapport de Mission
 - Rapport Financier
@@ -50,6 +51,7 @@ Si les Tiers 1 et 2 échouent, le contenu est envoyé au LLM (GPT-4o-mini) avec 
 - Plan Stratégique
 
 ### Types étendus
+
 - Statuts, Règlement Intérieur, Politique RH
 - Guide de Formation, Programme de Formation
 - Manuel de Procédures, Note de Service
@@ -70,10 +72,12 @@ Si les Tiers 1 et 2 échouent, le contenu est envoyé au LLM (GPT-4o-mini) avec 
 ## Intégration
 
 La classification s'effectue :
+
 1. **À l'ingestion** (`python -m RAG.ingest`) — chaque PDF est classifié lors du chargement initial
 2. **À l'upload** (`POST /upload`) — classification en temps réel quand l'utilisateur uploade un PDF via l'interface
 
 Le type détecté est stocké dans les métadonnées de chaque chunk dans ChromaDB (`doc_type`), ce qui permet :
+
 - Regroupement visuel par type sur la page Documents
 - Filtrage contextuel dans les réponses RAG
 - Icônes et couleurs spécifiques par type dans l'interface

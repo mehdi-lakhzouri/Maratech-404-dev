@@ -24,6 +24,7 @@ python -m RAG.ingest --reset  # Réinitialiser et ré-ingérer tout
 ```
 
 **Étapes :**
+
 1. Chargement des PDFs depuis `docs/pdf/`
 2. Nettoyage du texte (suppression artefacts PDF)
 3. Classification automatique du type de document (35+ types)
@@ -49,18 +50,19 @@ python -m RAG.ingest --reset  # Réinitialiser et ré-ingérer tout
 
 **Fonctionnalités avancées :**
 
-| Fonctionnalité | Description |
-|---|---|
-| **Contextualisation** | Reformulation des questions avec historique de chat |
-| **MMR Retrieval** | Maximum Marginal Relevance pour diversifier les résultats |
-| **Score-based Quality** | Évaluation de la pertinence (haute/moyenne/faible/aucune) |
-| **Token Budget** | Gestion du budget de tokens (max 12 000 caractères de contexte) |
-| **Multi-Query Fallback** | Si résultats faibles → génère 3 reformulations alternatives |
-| **IDK Detection** | Détection automatique des réponses "je ne sais pas" |
-| **Streaming** | Support SSE pour réponses en temps réel |
-| **Résumé** | Résumé par document avec chunks ordonnés par page |
+| Fonctionnalité           | Description                                                     |
+| ------------------------ | --------------------------------------------------------------- |
+| **Contextualisation**    | Reformulation des questions avec historique de chat             |
+| **MMR Retrieval**        | Maximum Marginal Relevance pour diversifier les résultats       |
+| **Score-based Quality**  | Évaluation de la pertinence (haute/moyenne/faible/aucune)       |
+| **Token Budget**         | Gestion du budget de tokens (max 12 000 caractères de contexte) |
+| **Multi-Query Fallback** | Si résultats faibles → génère 3 reformulations alternatives     |
+| **IDK Detection**        | Détection automatique des réponses "je ne sais pas"             |
+| **Streaming**            | Support SSE pour réponses en temps réel                         |
+| **Résumé**               | Résumé par document avec chunks ordonnés par page               |
 
 **Pipeline de réponse :**
+
 1. Contextualisation de la question (si historique existe)
 2. Recherche vectorielle MMR + évaluation des scores
 3. Quality gate — rejet si aucun document pertinent
@@ -70,25 +72,25 @@ python -m RAG.ingest --reset  # Réinitialiser et ré-ingérer tout
 
 ## Paramètres clés (`RAG/config.py`)
 
-| Paramètre | Valeur | Description |
-|---|---|---|
-| `CHUNK_SIZE` | 1500 | Taille des chunks en caractères |
-| `CHUNK_OVERLAP` | 300 | Chevauchement entre chunks |
-| `RETRIEVAL_K` | 3 | Nombre de chunks récupérés |
-| `LLM_MODEL` | `openai/gpt-4o-mini` | Modèle LLM via OpenRouter |
-| `LLM_TEMPERATURE` | 0.1 | Température (réponses précises) |
-| `LLM_MAX_TOKENS` | 400 | Tokens max par réponse |
-| `EMBEDDING_PROVIDER` | `huggingface` | Fournisseur d'embeddings |
-| `HUGGINGFACE_MODEL` | `all-MiniLM-L6-v2` | Modèle d'embeddings |
+| Paramètre            | Valeur               | Description                     |
+| -------------------- | -------------------- | ------------------------------- |
+| `CHUNK_SIZE`         | 1500                 | Taille des chunks en caractères |
+| `CHUNK_OVERLAP`      | 300                  | Chevauchement entre chunks      |
+| `RETRIEVAL_K`        | 3                    | Nombre de chunks récupérés      |
+| `LLM_MODEL`          | `openai/gpt-4o-mini` | Modèle LLM via OpenRouter       |
+| `LLM_TEMPERATURE`    | 0.1                  | Température (réponses précises) |
+| `LLM_MAX_TOKENS`     | 400                  | Tokens max par réponse          |
+| `EMBEDDING_PROVIDER` | `huggingface`        | Fournisseur d'embeddings        |
+| `HUGGINGFACE_MODEL`  | `all-MiniLM-L6-v2`   | Modèle d'embeddings             |
 
 ## Seuils de confiance (distance L2 ChromaDB)
 
-| Score | Confiance | Signification |
-|---|---|---|
-| < 1.0 | Haute | Document très pertinent |
-| 1.0 – 1.4 | Moyenne | Document possiblement pertinent |
-| 1.4 – 1.8 | Faible | Document peu pertinent → Multi-Query Fallback |
-| > 1.8 | Aucune | Aucun document pertinent → Message d'erreur |
+| Score     | Confiance | Signification                                 |
+| --------- | --------- | --------------------------------------------- |
+| < 1.0     | Haute     | Document très pertinent                       |
+| 1.0 – 1.4 | Moyenne   | Document possiblement pertinent               |
+| 1.4 – 1.8 | Faible    | Document peu pertinent → Multi-Query Fallback |
+| > 1.8     | Aucune    | Aucun document pertinent → Message d'erreur   |
 
 ## Dépendances Python
 

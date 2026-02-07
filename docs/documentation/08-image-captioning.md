@@ -37,6 +37,7 @@ PDF → PyMuPDF (extraction images) → Filtrage (taille min)
 ### 3. Captioning via GPT-4o-mini Vision
 
 **Prompt utilisé :**
+
 > "Décris cette image de manière détaillée en français pour une personne aveugle.
 > Si c'est un graphique, tableau, logo ou diagramme, décris son contenu et sa signification.
 > Sois précis et utile.
@@ -68,11 +69,11 @@ class ImageCaption:
 
 ## Fonctions exportées
 
-| Fonction | Description |
-|---|---|
-| `caption_pdf_images(path, translate, use_cache)` | Pipeline complet : extraction + captioning |
-| `get_cached_captions(filename)` | Récupérer les captions depuis le cache |
-| `delete_cached_captions(filename)` | Supprimer le cache (appelé lors de la suppression d'un document) |
+| Fonction                                         | Description                                                      |
+| ------------------------------------------------ | ---------------------------------------------------------------- |
+| `caption_pdf_images(path, translate, use_cache)` | Pipeline complet : extraction + captioning                       |
+| `get_cached_captions(filename)`                  | Récupérer les captions depuis le cache                           |
+| `delete_cached_captions(filename)`               | Supprimer le cache (appelé lors de la suppression d'un document) |
 
 ## Endpoint API
 
@@ -81,6 +82,7 @@ class ImageCaption:
 Retourne les descriptions de toutes les images d'un PDF.
 
 **Response :**
+
 ```json
 {
   "filename": "rapport.pdf",
@@ -102,6 +104,7 @@ Retourne les descriptions de toutes les images d'un PDF.
 ## Interface frontend
 
 Sur la page Documents, chaque document a un bouton **📷 Images** :
+
 - Clic → appel API → affichage des descriptions
 - Thumbnail cliquable avec description textuelle
 - Annonce aria-live quand les descriptions sont prêtes
